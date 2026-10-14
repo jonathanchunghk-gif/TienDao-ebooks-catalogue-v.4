@@ -1,0 +1,1435 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>天道書樓｜電子書目 v.4</title>
+<style>
+:root{--bg:#f5f3ec;--card:#fffdf8;--ink:#24483e;--muted:#68776e;--line:#d9dfd2;--accent:#aa583d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Microsoft JhengHei",sans-serif;line-height:1.7}
+button,input,select{font:inherit}
+button,a,select{touch-action:manipulation}
+button{cursor:pointer}
+button:disabled{opacity:.45;cursor:default}
+a{color:inherit;text-underline-offset:4px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.wrap{width:min(1240px,92%);margin:auto}
+header{border-bottom:1px solid var(--line);background:var(--card)}
+.header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0}
+.brand{text-decoration:none;font-size:23px;font-weight:750;letter-spacing:.1em}
+.brand small{display:block;font-size:10px;letter-spacing:.12em;font-weight:400}
+button,.button{border:1px solid var(--ink);background:var(--ink);color:white;border-radius:4px;padding:9px 15px;text-decoration:none}
+.light{background:transparent;color:var(--ink)}
+.hero{padding:48px 0 25px}
+.eyebrow{font-size:11px;letter-spacing:.15em;color:var(--muted)}
+h1{font-family:serif;font-size:clamp(36px,6vw,65px);font-weight:500;line-height:1.25;margin:12px 0 18px}
+h1 em{font-style:normal;color:var(--accent)}
+.hero p{max-width:760px;color:var(--muted)}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;padding:20px;background:#e9ede2;border:1px solid var(--line);border-radius:6px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field.search{flex:1 1 280px}
+label{font-size:12px}
+input,select{padding:10px 12px;border:1px solid #cbd3c4;border-radius:4px;background:var(--card);color:var(--ink);min-width:0;width:100%}
+.results{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}
+.status{font-size:14px}
+.controls{display:flex;gap:8px;flex-wrap:wrap}
+.controls button{font-size:12px;padding:7px 11px}
+.note{font-size:12px;color:var(--muted)}
+.catalogue{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.book{background:var(--card);border:1px solid var(--line);border-radius:5px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.cover{display:flex;flex-direction:column;justify-content:space-between;gap:18px;min-height:210px;padding:22px;color:#fffaf0;background:var(--ink);border:0;border-left:6px solid #ffffff25;border-radius:0;text-align:left;width:100%;position:relative;overflow:hidden}
+.cover:after{content:"";position:absolute;right:-45px;bottom:-55px;width:130px;height:130px;border:1px solid #ffffff40;border-radius:50%;pointer-events:none}
+.cover.c1{background:#a25b40}
+.cover.c2{background:#a38b58}
+.cover.c3{background:#536c79}
+.cover.c4{background:#747850}
+.cover.c5{background:#7e6171}
+.cover small{font-size:9px;letter-spacing:.1em;opacity:.9}
+.cover strong{font-family:serif;font-size:23px;line-height:1.6;font-weight:500;overflow-wrap:anywhere;position:relative;z-index:1}
+.body{padding:17px;display:flex;flex-direction:column;flex:1}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.tag{font-size:10px;background:#eaf0e4;color:#4c6652;padding:2px 7px;border-radius:3px}
+h2{font-size:15px;line-height:1.6;margin:0 0 7px}
+.title-button{padding:0;border:0;background:none;color:var(--ink);text-align:left;font-weight:700}
+.subtitle{font-size:12px;color:var(--muted);margin:0 0 8px}
+.people{font-size:11px;color:var(--muted);overflow-wrap:anywhere;margin:0 0 15px}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:auto}
+.actions .button,.actions button{font-size:12px;padding:7px 10px}
+.save{background:none;color:var(--ink);border-color:var(--line)}
+.save.saved{background:#f8e7df;color:var(--accent);border-color:#d8b19f}
+.pending{font-size:12px;color:var(--muted)}
+.catalogue.list{grid-template-columns:1fr}
+.catalogue.list .book{flex-direction:row}
+.catalogue.list .cover{width:140px;flex-shrink:0;min-height:160px;padding:15px}
+.catalogue.list .cover strong{font-size:17px}
+.catalogue.list .body{padding:18px}
+.catalogue.list .actions{margin-top:10px}
+.empty{grid-column:1/-1;text-align:center;padding:50px;border:1px dashed var(--line)}
+.pagination{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;margin:28px 0 45px}
+.pagination button{background:none;color:var(--ink);border-color:var(--line)}
+.pagination button.active{background:var(--ink);color:white}
+.fallback{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--card);border:1px solid var(--line);padding:20px;font-size:12px;max-height:70vh;overflow:auto}
+footer{border-top:1px solid var(--line);padding:30px 0;margin-top:30px;color:var(--muted);font-size:12px}
+.modal{position:fixed;inset:0;background:#142c2577;z-index:20;display:grid;place-items:center;padding:18px}
+.modal[hidden]{display:none}
+.panel{background:var(--card);width:min(720px,100%);max-height:88vh;overflow:auto;border-radius:6px;box-shadow:0 20px 80px #0004}
+.modal-head{position:sticky;top:0;background:var(--card);display:flex;justify-content:space-between;align-items:center;gap:15px;padding:14px 22px;border-bottom:1px solid var(--line);z-index:1}
+.modal-head button{padding:4px 12px;font-size:21px;background:none;color:var(--ink);border:0}
+.modal-content{padding:24px}
+.modal-content h2{font-family:serif;font-size:28px;font-weight:500}
+.modal-content h3{font-size:16px;margin:25px 0 8px}
+.modal-content p{font-size:14px}
+.warning{padding:12px;background:#f5e7d9;color:#8d5032;font-size:12px;margin:15px 0}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:30;padding:10px 20px;background:var(--ink);color:white;border-radius:4px;font-size:13px;max-width:90vw}
+[hidden]{display:none!important}
+@media(max-width:1000px){.catalogue{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.catalogue{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cover{min-height:190px;padding:17px 12px}.cover strong{font-size:20px}.body{padding:12px}.toolbar{padding:14px}.field{flex:1 1 140px}.header{padding:14px 0}.brand{font-size:19px}.header button{font-size:12px}.hero{padding-top:30px}.catalogue.list .cover{width:100px}.catalogue.list .cover strong{font-size:15px}}
+@media(max-width:380px){.catalogue{grid-template-columns:1fr}.cover{min-height:175px}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap header">
+<a class="brand" href="#top">天道書樓<small>TIEN DAO · EBOOK CATALOGUE</small></a>
+<button type="button" class="light" id="savedToggle">♡ 我的書單 <span id="savedCount">0</span></button>
+</div>
+</header>
+
+<main class="wrap" id="top">
+<section class="hero">
+<span class="eyebrow">READ · REFLECT · RENEW</span>
+<h1>讓閱讀，成為生命的<em>光。</em></h1>
+<p>探索聖經研讀、神學、靈修、教牧與生活書籍。以下書目直接收錄於本 HTML，不需要從外部服務下載資料。</p>
+<p class="note">書名、貢獻者、語言代碼及連結按你提供的資料整理；售價和供應以商店為準。書封為示意設計。</p>
+</section>
+
+<section aria-label="電子書目">
+<div class="toolbar">
+<div class="field search">
+<label for="search">搜尋書名、副標題或貢獻者</label>
+<input type="search" id="search" placeholder="例如：謝挺、教牧書信、詩篇…" autocomplete="off">
+</div>
+<div class="field">
+<label for="series">書目系列</label>
+<select id="series">
+<option value="all">全部系列</option>
+<option value="tian">天註系列</option>
+<option value="putian">普天註釋系列</option>
+<option value="other">其他書籍</option>
+</select>
+</div>
+<div class="field">
+<label for="language">原始語言欄</label>
+<select id="language">
+<option value="all">全部語言</option>
+<option value="chi">chi — 中文</option>
+<option value="eng">eng — 英文</option>
+<option value="vie">vie — 越南文</option>
+<option value="ara">ara — 原欄值待核對</option>
+<option value="unknown">未提供</option>
+</select>
+</div>
+<div class="field">
+<label for="pageSize">每頁顯示</label>
+<select id="pageSize">
+<option value="24">24 本</option>
+<option value="48">48 本</option>
+<option value="96">96 本</option>
+<option value="all">全部書籍</option>
+</select>
+</div>
+</div>
+
+<div class="results">
+<span id="status" class="status" role="status" aria-live="polite">書目資料已嵌入下方；正在準備互動顯示。</span>
+<div class="controls">
+<button type="button" class="light" id="reset">重設篩選</button>
+<button type="button" class="light" id="viewToggle">清單顯示</button>
+<button type="button" class="light" id="export">匯出我的書單</button>
+</div>
+</div>
+
+<div id="catalogue" class="catalogue"></div>
+<nav id="pagination" class="pagination" aria-label="書目分頁"></nav>
+
+<div id="fallbackIntro">
+<p class="note">以下是內嵌完整書目。互動目錄成功建立後，這份原始列表會自動收起。即使 JavaScript 無法執行，書籍資料仍可在這裡閱讀。</p>
+<p class="note">欄位：書名｜Google Play 書籍 ID｜貢獻者｜副標題｜語言。未另註語言的項目為原資料 chi；「~」代表原欄空白。未註角色的貢獻者為作者，特別角色另列。</p>
+</div>
+
+<pre id="bookData" class="fallback">教牧書信（卷上）─提摩太前書|fuGgEQAAQBAJ|鮑維均（David W. Pao）
+教牧書信（卷下）─提摩太後書，提多書|aSnkEQAAQBAJ|鮑維均（David W. Pao）
+頌於神（上）：默想詩篇1至72篇|Yxn7DwAAQBAJ|謝挺
+頌於神(下): 默想詩篇73至150篇||謝挺
+始於神|zBykBwAAQBAJ|謝挺|創世記靈修日引
+出於神：出埃及記靈修日引|nucEDQAAQBAJ|謝挺
+缺席的神|1_jaEAAAQBAJ|謝挺|雅歌與以斯帖記研究
+慧於神|ZAhsCgAAQBAJ|謝挺|箴言‧約伯記‧傳道書靈修日引
+茁苗|VzEhEAAAQBAJ|盧宏博 (李保羅、李榮鳳)|初信栽培手冊
+與路加同讀舊約|qo4oEQAAQBAJ|陳偉迦（Addson W. Chan）|勿說這就是信仰
+讓明光透現：邁向整全的靈命塑造|FaA5EAAAQBAJ|黃韻妍
+聖召出聖徒|dag2DwAAQBAJ|高銘謙|由內而外的門訓四十二章經
+同作門徒|V7g2DwAAQBAJ|葉福成 [作者];莫瑞英 [作者]|耶穌門訓24課
+聖徒之逆襲|Kj5tDwAAQBAJ|蘇遠泰 [作者];溫慧汶 [作者]|顛覆屬世生命，以至不公義社會
+聖徒之逆襲（學員本）|CkFtDwAAQBAJ|蘇遠泰 [作者];溫慧汶 [作者]|顛覆屬世生命，以至不公義社會
+女人要愛．男人要尊重|DKdMEQAAQBAJ|
+躍過高牆──俗世聖徒靈性旅程20課|hIvQEQAAQBAJ|尤金．畢德生（Eugene H. Peterson, 1932-2018） [角色未註明]
+從啟示錄看顛覆現實的基督信仰|7vhtDwAAQBAJ|鮑維均
+寧謐中的相遇：28種靈修深度行的方式|e7cdEQAAQBAJ|藍志揚（Chi-yeung Lam）
+唯獨聖經|RBLcDAAAQBAJ|鮑維均|聖言的詮釋與應用
+從路加著作看顛覆現實的基督信仰|2xPcDAAAQBAJ|鮑維均
+童來靈修聖經|ABgxEAAAQBAJ|畢德生（Eugene H. Peterson）
+21世紀新約導論|ludWEAAAQBAJ|卡森（D. A. Carson） [作者];穆爾（Douglas J. Moo ） [作者]|An Introduction to the New Testament
+穿越聖經的時代禱聲|amFtEQAAQBAJ|梁美心
+重整權力架構的恩典|yvv6DwAAQBAJ|鮑維均|再思羅馬書福音真義
+新約釋經講道學|iHGpDwAAQBAJ|楊詠嫦
+從記念神恩到重整現實：聖經節期的神學反思|rSS1DwAAQBAJ|鮑維均
+福音生命禮讚——信仰領航者巴刻|h-lMEQAAQBAJ|賴肯（Leland Ryken）
+365家庭崇拜|90c6EAAAQBAJ|肯玲等（V. Louise Cunningham, etc.）|The One Year Book of Family Devotions
+5天令丈夫大翻新|mQukBwAAQBAJ|李曼博士（Dr. Kevin Leman） [作者];丘德恩 [譯者]
+5天令自己大翻新|bh84CwAAQBAJ|李曼博士（Dr. Kevin Leman）
+5天令青少年大翻新|lIxVCgAAQBAJ|李曼博士（Dr. Kevin Leman）
+5天令孩子大翻新|1uRCCgAAQBAJ|李曼博士（Dr. Kevin Leman）
+70x變焦讀舊約|IuZCCgAAQBAJ|鄧啟耀|帶你宏觀／微探‧讀通聖經
+70x變焦讀新約|cbg2DwAAQBAJ|鄧啟耀|帶你宏觀／微探‧讀通聖經
+七日全職信仰|QqFBEAAAQBAJ|史蒂文斯 (R. Paul Stevens)
+突破現實牢籠的福音|bzEhEAAAQBAJ|鮑維均|重讀監獄書信
+顛覆群體認知的福音|EzcNEAAAQBAJ|鮑維均|再思大公書信
+顛覆現實的基督論|Z6g2DwAAQBAJ|鮑維均
+顛覆現實的教會論|yvhtDwAAQBAJ|鮑維均
+舊約歷史圖解與年代表||||~
+「慎牧心語」1|GaegCwAAQBAJ|慎勇
+7小時讀通以弗所書|vSa1DwAAQBAJ|張穎新
+7小時讀通路得記|Y0NtDwAAQBAJ|楊文立
+二十世紀神學選讀|8wJWCgAAQBAJ|楊慶球
+二千年靈修神學歷史|GS3TCgAAQBAJ|彭順強
+人生 Cha Cha Cha (簡體版)|-AF2CgAAQBAJ|羅淑芬|你也可做個助己助人舞動人生的生命教練
+人生過渡DIY|tzBDCgAAQBAJ|區祥江
+人生Cha Cha Cha|lgBsCgAAQBAJ|羅淑芬|你也可做個助己助人舞動人生的生命教練
+十架七言|fk9WEAAAQBAJ|陳志宏|再思主耶穌那長闊高深的愛
+十誡|w4w5DAAAQBAJ|陳志宏|與幸福有約
+下一站，戀愛|JTFDCgAAQBAJ|迪邁克（Michael DiMarco） [作者];迪海莉（Hayley DiMarco） [作者]|炮製甜蜜愛情七件事
+士師記：亂世中的拯救|jg8QDQAAQBAJ|張慕皚
+大背道|fN9CCgAAQBAJ|陳金獅
+女人後裔的應許：神宏大救贖故事的序幕（創一至十一章）|6aA5EAAAQBAJ|陳錦友
+女皇的教室|NQnhDwAAQBAJ|黃桂蓮|跨族裔服侍實錄
+小先知書講義（上冊）|I1M9CwAAQBAJ|陳終道
+小先知書講義（下冊）|heftDQAAQBAJ|陳終道
+中色神學概覽|F6g2DwAAQBAJ|溫以諾
+中途站|azDTCgAAQBAJ|張連生|遇上12人
+五旬宗及靈恩運動──研究導論及趨勢評估|EtonEAAAQBAJ|廖炳堂（Herrick Ping-tong Liu）
+五經導論|Wn-gCwAAQBAJ|賴建國
+今日哥林多教會|8aeLDAAAQBAJ|梁家麟|哥林多前書註釋
+从耶稣学的别世祷告（学员本）|TyGBDwAAQBAJ|Paul K. Lee
+从耶稣学的别世祷告（教师本）|dyGBDwAAQBAJ|Paul K. Lee
+分比問想|q6brCgAAQBAJ|張穎新|讀釋創世記之旅
+天註：士師記|u1C3DwAAQBAJ|曾祥新
+天註：士師記（簡體版）|r5QBEAAAQBAJ|曾祥新
+天註：以弗所書|gfvMDwAAQBAJ|黎惠康
+天註：以弗所書（簡體版）|P6QBEAAAQBAJ|黎惠康
+天註：以西結書（卷上）|Qg1uDwAAQBAJ|唐佑之
+天註：以西結書（卷上）（簡體版）|69EAEAAAQBAJ|唐佑之||~
+天註：以西結書（卷下）|_OjMDwAAQBAJ|唐佑之
+天註：以西結書（卷下）（簡體版）|AtIAEAAAQBAJ|唐佑之||~
+天註：以斯帖記|sB64DwAAQBAJ|蔡金玲
+天註：以斯帖記（簡體版）|qaQBEAAAQBAJ|蔡金玲
+天註：以斯拉記|Hla3DwAAQBAJ|區應毓
+天註：以斯拉記（簡體版）|uZQBEAAAQBAJ|區應毓
+天註：以賽亞書（卷一）|7hi4DwAAQBAJ|呂紹昌
+天註：以賽亞書（卷一）（簡體版）|L6QBEAAAQBAJ|呂紹昌
+天註：以賽亞書（卷二）|mB-4DwAAQBAJ|吳獻章
+天註：以賽亞書（卷二）（簡體版）|Mn4GEAAAQBAJ|吳獻章
+天註：以賽亞書（卷三）|-Bi4DwAAQBAJ|吳獻章
+天註：以賽亞書（卷三）（簡體版）|RaQBEAAAQBAJ|吳獻章
+天註：以賽亞書（卷四）|Bhm4DwAAQBAJ|吳獻章
+天註：以賽亞書（卷四）（簡體版）|TaQBEAAAQBAJ|吳獻章
+天註：出埃及記（卷上）|ezrNDwAAQBAJ|賴建國
+天註：出埃及記（卷上）（簡體版）|m5cBEAAAQBAJ|賴建國
+天註：出埃及記（卷下）|gTrNDwAAQBAJ|賴建國
+天註：出埃及記（卷下）（簡體版）|n5cBEAAAQBAJ|賴建國
+天註：加拉太書|lA1uDwAAQBAJ|岑紹麟
+天註：加拉太書（簡體版）|YKUBEAAAQBAJ|岑紹麟
+天註：尼希米記|nznNDwAAQBAJ|邵晨光
+天註：尼希米記（簡體版）|L5YBEAAAQBAJ|邵晨光
+天註：民數記|jB64DwAAQBAJ|曾祥新
+天註：民數記（簡體版）|k6QBEAAAQBAJ|曾祥新
+天註：申命記（卷上）|Llu3DwAAQBAJ|劉少平（Sow-Pheng Liew）
+天註：申命記（卷上）（簡體版）|Q5YBEAAAQBAJ|劉少平（Sow-Pheng Liew）
+天註：申命記（卷下）|6l23DwAAQBAJ|劉少平（Sow-Pheng Liew）
+天註：申命記（卷下）（簡體版）|R5YBEAAAQBAJ|劉少平（Sow-Pheng Liew）
+天註：列王紀（卷一）|qznNDwAAQBAJ|李保羅
+天註：列王紀（卷一）（簡體版）|T5YBEAAAQBAJ|李保羅
+天註：列王紀（卷二）|V9vMDwAAQBAJ|李保羅
+天註：列王紀（卷二）（簡體版）|U5YBEAAAQBAJ|李保羅
+天註：列王紀（卷三）|Pd7MDwAAQBAJ|李保羅
+天註：列王紀（卷三） （簡體版）|X5YBEAAAQBAJ|李保羅
+天註：列王紀（卷四）|8znNDwAAQBAJ|李保羅
+天註：列王紀（卷四）（簡體版）|15YBEAAAQBAJ|李保羅
+天註：但以理書|3bnMDwAAQBAJ|鄺炳釗
+天註：但以理書（簡體版）|5dEAEAAAQBAJ|鄺炳釗
+天註：何西阿書|mx_9DwAAQBAJ|劉少平（Sow-Pheng Liew）
+天註：何西阿書（簡體版）|9aMBEAAAQBAJ|劉少平（Sow-Pheng Liew）
+天註：利未記（卷上）|ag1uDwAAQBAJ|洪同勉
+天註：利未記（卷上）（簡體版）|_tEAEAAAQBAJ|洪同勉||~
+天註：利未記（卷下）|dA1uDwAAQBAJ|洪同勉
+天註：利未記（卷下）（簡體版）|CNIAEAAAQBAJ|洪同勉||~
+天註：希伯來書（卷上）|e_DtDQAAQBAJ|馮蔭坤
+天註：希伯來書（卷上）（簡體版）|YNIAEAAAQBAJ|馮蔭坤||~
+天註：希伯來書（卷下）|eQjuDQAAQBAJ|馮蔭坤
+天註：希伯來書（卷下）（簡體版）|ZtIAEAAAQBAJ|馮蔭坤||~
+天註：使徒行傳（卷一）|AQjvDQAAQBAJ|張永信
+天註：使徒行傳（卷一）（簡體版）|0ZQBEAAAQBAJ|張永信
+天註：使徒行傳（卷二）|3AfvDQAAQBAJ|張永信
+天註：使徒行傳（卷二）（簡體版）|GZYBEAAAQBAJ|張永信
+天註：使徒行傳（卷三）|JgjvDQAAQBAJ|張永信
+天註：使徒行傳（卷三）（簡體版）|N5YBEAAAQBAJ|張永信
+天註：帖撒羅尼迦前書|a_zMDwAAQBAJ|馮蔭坤
+天註：帖撒羅尼迦前書（簡體版）|8dEAEAAAQBAJ|馮蔭坤||~
+天註：帖撒羅尼迦後書|FzbNDwAAQBAJ|馮蔭坤
+天註：帖撒羅尼迦後書（簡體版）|FNIAEAAAQBAJ|馮蔭坤||~
+天註：彼得前書|Zk-3DwAAQBAJ|張永信 [作者];張略 [作者]
+天註：彼得前書（簡體版）|fZQBEAAAQBAJ|張永信||~
+天註：彼得後書、猶大書|9B64DwAAQBAJ|張略
+天註：彼得後書、猶大書（簡體版）|YqUBEAAAQBAJ|張略
+天註：俄巴底亞書、約拿書|nzrNDwAAQBAJ|謝慧兒
+天註：俄巴底亞書、約拿書（簡體版）|R58BEAAAQBAJ|謝慧兒
+天註：哈巴谷書，西番雅書，哈該書（簡體版）|C58BEAAAQBAJ|黃天相
+天註：哈巴谷書、西番雅書、哈該書|lTrNDwAAQBAJ|黃天相
+天註：約伯記（卷上）|YzjNDwAAQBAJ|唐佑之
+天註：約伯記（卷上） （簡體版）|JtIAEAAAQBAJ|唐佑之||~
+天註：約伯記（卷下）|BEe3DwAAQBAJ|唐佑之
+天註：約伯記（卷下）（簡體版）|atIAEAAAQBAJ|唐佑之
+天註：約書亞記|ig1uDwAAQBAJ|張玉明
+天註：約書亞記（簡體版）|j6QBEAAAQBAJ|張玉明
+天註：約珥書，阿摩司書（簡體版）|CZ8BEAAAQBAJ|劉少平（Sow-Pheng Liew）
+天註：約珥書、阿摩司書|mWa3DwAAQBAJ|劉少平（Sow-Pheng Liew）
+天註：約翰壹貳叁書（卷上）|OB64DwAAQBAJ|吳道宗
+天註：約翰壹貳叁書（卷上）（簡體版）|haQBEAAAQBAJ|吳道宗
+天註：約翰壹貳叁書（卷下）|uh64DwAAQBAJ|吳道宗
+天註：約翰壹貳叁書（卷下）（簡體版）|WqUBEAAAQBAJ|吳道宗
+天註：約翰福音（卷上）|TgnvDQAAQBAJ|鍾志邦
+天註：約翰福音（卷上）（簡體版）|tZYBEAAAQBAJ|鍾志邦
+天註：約翰福音（卷下）|cwnvDQAAQBAJ|鍾志邦
+天註：約翰福音（卷下）（簡體版）|j5sBEAAAQBAJ|鍾志邦
+天註：耶利米哀歌|Y0m3DwAAQBAJ|唐佑之
+天註：耶利米哀歌（簡體版）|btIAEAAAQBAJ|唐佑之
+天註：耶利米書（卷上）|Yg1uDwAAQBAJ|唐佑之
+天註：耶利米書（卷上）（簡體版）|GNIAEAAAQBAJ|唐佑之||~
+天註：耶利米書（卷下）|bg1uDwAAQBAJ|唐佑之
+天註：耶利米書（卷下）（簡體版）|KNIAEAAAQBAJ|唐佑之||~
+天註：哥林多前書（卷上）|mmC3DwAAQBAJ|黃浩儀
+天註：哥林多前書（卷上）（簡體版）|Z5YBEAAAQBAJ|黃浩儀
+天註：哥林多前書（卷下）|yzrNDwAAQBAJ|何善斌、張達民
+天註：哥林多前書（卷下）（簡體版）|aZYBEAAAQBAJ|何善斌、張達民
+天註：哥林多後書|gA1uDwAAQBAJ|陳濟民
+天註：哥林多後書（簡體版）|kZYBEAAAQBAJ|陳濟民
+天註：馬太福音|BB-4DwAAQBAJ|黃鴻興
+天註：馬太福音（簡體版）|Jn4GEAAAQBAJ|黃鴻興||~
+天註：馬可福音（卷上）|th64DwAAQBAJ|葉雅蓮
+天註：馬可福音（卷上）（簡體版）|q6QBEAAAQBAJ|葉雅蓮
+天註：馬可福音（卷下）|3h-4DwAAQBAJ|葉雅蓮
+天註：馬可福音（卷下）（簡體版）|OH4GEAAAQBAJ|葉雅蓮
+天註：啟示錄|ja82DwAAQBAJ|鮑會園
+天註：啟示錄（簡體版）|k5cBEAAAQBAJ|鮑會園
+天註：教牧書信|t2a3DwAAQBAJ|張永信
+天註：教牧書信（簡體版）|RZ8BEAAAQBAJ|張永信
+天註：創世記（卷一）|kzjNDwAAQBAJ|鄺炳釗
+天註：創世記（卷一）（簡體版）|c5QBEAAAQBAJ|鄺炳釗
+天註：創世記（卷二）|nTjNDwAAQBAJ|鄺炳釗
+天註：創世記（卷二）（簡體版）|gZQBEAAAQBAJ|鄺炳釗
+天註：創世記（卷三）|3zjNDwAAQBAJ|鄺炳釗
+天註：創世記（卷三）（簡體版）|w5QBEAAAQBAJ|鄺炳釗
+天註：創世記（卷五）|ZznNDwAAQBAJ|鄺炳釗
+天註：創世記（卷五）（簡體版）|zZQBEAAAQBAJ|鄺炳釗
+天註：創世記（卷四）|FznNDwAAQBAJ|鄺炳釗
+天註：創世記（卷四）（簡體版）|x5QBEAAAQBAJ|鄺炳釗
+天註：腓立比書|ee_tDQAAQBAJ|馮蔭坤
+天註：腓立比書（簡體版）|39EAEAAAQBAJ|馮蔭坤
+天註：腓利門書|PzbNDwAAQBAJ|黃浩儀
+天註：腓利門書（簡體版）|INIAEAAAQBAJ|黃浩儀||~
+天註：雅各書|RUi3DwAAQBAJ|梁康民
+天註：雅各書（簡體版）|fNIAEAAAQBAJ|梁康民
+天註：雅歌|MgnuDQAAQBAJ|黃朱倫
+天註：雅歌（簡體版）|mZQBEAAAQBAJ|黃朱倫
+天註：傳道書|nA1uDwAAQBAJ|吳獻章
+天註：傳道書（簡體版）|ZqUBEAAAQBAJ|吳獻章
+天註：詩篇（卷一）|8Ci6DwAAQBAJ|張國定
+天註：詩篇（卷一）（簡體版）|1ZQBEAAAQBAJ|张国定
+天註：詩篇（卷二）|_ii6DwAAQBAJ|張國定
+天註：詩篇（卷二）（簡體版）|MZYBEAAAQBAJ|张国定
+天註：詩篇（卷三）|ACm6DwAAQBAJ|張國定
+天註：詩篇（卷三）（簡體版）|ZZYBEAAAQBAJ|张国定
+天註：詩篇（卷四）|w-HMDwAAQBAJ|張國定
+天註：詩篇（卷四）（簡體版）|fZcBEAAAQBAJ|张国定
+天註：路加福音（卷上）|Ch-4DwAAQBAJ|鮑維均
+天註：路加福音（卷上）（簡體版）|8n0GEAAAQBAJ|鮑維均
+天註：路加福音（卷下）|kB64DwAAQBAJ|鮑維均
+天註：路加福音（卷下）（簡體版）|BH4GEAAAQBAJ|鮑維均
+天註：路得記|qB64DwAAQBAJ|周永健
+天註：路得記（簡體版）|laQBEAAAQBAJ|周永健
+天註：歌羅西書|K-7tDQAAQBAJ|鮑會園
+天註：歌羅西書（簡體版）|2dEAEAAAQBAJ|鮑會園
+天註：撒母耳記上（卷一）|fznNDwAAQBAJ|詹正義
+天註：撒母耳記上（卷一）（簡體版）|IZYBEAAAQBAJ|詹正義
+天註：撒母耳記上（卷二）|wFi3DwAAQBAJ|詹正義
+天註：撒母耳記上（卷二） （簡體版）|PZYBEAAAQBAJ|詹正義
+天註：撒母耳記下|uzrNDwAAQBAJ|梁潔瓊
+天註：撒母耳記下（簡體版）|cqUBEAAAQBAJ|梁潔瓊
+天註：撒迦利亞書、瑪拉基書|pB-4DwAAQBAJ|唐佑之
+天註：撒迦利亞書、瑪拉基書（簡體版）|On4GEAAAQBAJ|唐佑之
+天註：箴言|_GW3DwAAQBAJ|梁薇
+天註：箴言（簡體版）|554BEAAAQBAJ|梁薇
+天註：歷代志上（卷一）|ATrNDwAAQBAJ|區應毓
+天註：歷代志上（卷一）（簡體版）|l5cBEAAAQBAJ|區應毓
+天註：歷代志上（卷二）|zTrNDwAAQBAJ|區應毓
+天註：歷代志上（卷二）（簡體版）|CH4GEAAAQBAJ|區應毓
+天註：歷代志下（卷一）|z93MDwAAQBAJ|區應毓
+天註：歷代志下（卷一）（簡體版）|Dn4GEAAAQBAJ|區應毓
+天註：歷代志下（卷二）|Kd_MDwAAQBAJ|區應毓
+天註：歷代志下（卷二）（簡體版）|GH4GEAAAQBAJ|區應毓
+天註：彌迦書、那鴻書|kR_9DwAAQBAJ|胡維華
+天註：彌迦書、那鴻書（簡體版）|caMBEAAAQBAJ|胡維華
+天註：羅馬書（卷上）|3-vMDwAAQBAJ|鮑會園
+天註：羅馬書（卷上）（簡體版）|FtIAEAAAQBAJ|鮑會園||~
+天註：羅馬書（卷下）|YEy3DwAAQBAJ|鮑會園
+天註：羅馬書（卷下）（簡體版）|hNIAEAAAQBAJ|鮑會園
+心弦觸動|dAFsCgAAQBAJ|梁少玲 [編輯];陳國溪 [編輯]|與殘疾人士同行歷程的理解與反思
+心意更新變化系列（一）：創造篇|R5hSEQAAQBAJ|盧玉音
+心意更新變化系列（二）：立約篇|XZhSEQAAQBAJ|盧玉音
+心意更新變化系列（三）：敬拜篇|c5hSEQAAQBAJ|盧玉音
+心意更新變化系列（五）：智慧篇|wZhSEQAAQBAJ|盧玉音
+心意更新變化系列（四）：愛鄰舍篇|f5hSEQAAQBAJ|盧玉音||~
+心歡喜，靈花放|TTJDCgAAQBAJ|麥寶琳（小麥子）
+心靈的重塑|5_0xEAAAQBAJ|魏樂德（Dallas Willard）
+心靈的迴響|_XKwEAAAQBAJ|朗文 (Tremper Longman III)|詩篇的信息與研讀方法
+日出之所到日落之處|QBbwCgAAQBAJ|小麥子
+日常神學|ujFDCgAAQBAJ|范浩沙（Kevin J. Vanhoozer）|閱讀文化文本，詮釋趨勢
+比喻人生|juVCCgAAQBAJ|葉福成
+父母成長心靈手冊|-p49DAAAQBAJ|黃妹 [編輯];曾穗香 [編輯]
+父母見證•查經•歷奇|S5U9DAAAQBAJ|黃妹 [編輯];錢妙儀 [其他];曾穗香 [其他];樓恩德 [其他]
+父親心：中國文化篇|Jbg2DwAAQBAJ|李淑文
+父親心：神學、歷史篇|6bc2DwAAQBAJ|李淑文
+父親心：聖經篇|Cbg2DwAAQBAJ|李淑文
+王者再臨|p2HBEAAAQBAJ|吳維和|啟示錄析讀
+世界名人宗教觀|fAXwCgAAQBAJ|章力生
+主的聲音|1W-wEAAAQBAJ|高登．史密思（Gordon T. Smith）|辨識、禱告及聖靈的印證
+主啊！我要痊癒|RQMyDAAAQBAJ|劉富理|從聖經的研究及實際牧會看饒恕及基督教全人醫治的關係
+主禱文|WHFXEAAAQBAJ|陳志宏
+以弗所书与服侍教会（学员本）|vyGBDwAAQBAJ|Paul K. Lee
+以弗所书与服侍教会（教师本）|yyGBDwAAQBAJ|Paul K. Lee
+以弗所書：教會的豐盛與榮耀|kRAQDQAAQBAJ|曾立華
+以利亞以利沙的故事|l_fpEAAAQBAJ|張玉明|敘事文體釋經法
+以斯帖記靈拾|Q6KBCwAAQBAJ|何照洪
+以賽亞書（40~66章）─末世展望中的安慰|iyS1DwAAQBAJ|曾立華
+出死入生的靈程|aeVCCgAAQBAJ|金新宇 [作者];聶錦勳 [作者]
+出埃及記：出死入生之路|w-cEDQAAQBAJ|蘇穎智
+古道今釋|LBikBwAAQBAJ|華德‧凱瑟（Walter C. Kaiser, Jr.）|如何宣講和教導舊約信息
+圣经．旧约全书──环球圣经译本（简体．神字版）（响导版）|J4rmEAAAQBAJ|張達民博士 [主編];環球聖經公會 [作者]|The Holy Bible: Old Testament – Worldwide Chinese Bible（Simplified Character / Shen Edition）
+圣经．新约全书──环球圣经译本（简体．神字版）（响导版）|6YbmEAAAQBAJ|張達民博士 [主編];環球聖經公會 [作者]|The Holy Bible: New Testament – Worldwide Chinese Bible（Simplified Character / Shen Edition）
+平靜安穩|6qaaCgAAQBAJ|陳國偉
+末世的啟示——超越一切的基督（上冊）組長本|2kBtDwAAQBAJ|周燕屏|活用小組查經系列：希伯來書第一至六章（組長本）
+末世的啟示——超越一切的基督（上冊）組員本|tEBtDwAAQBAJ|周燕屏|活用小組查經系列：希伯來書第一至六章
+末世的啟示——超越一切的基督（下冊）組長本|EkFtDwAAQBAJ|周燕屏|活用小組查經系列：希伯來書第七至十三章
+末世的啟示——超越一切的基督（下冊）組員本|8EBtDwAAQBAJ|周燕屏|活用小組查經系列：希伯來書第一至六章
+末世神學初探|RC9DCgAAQBAJ|張永信
+末世預兆|47CaCgAAQBAJ|陳國偉|經文精選
+母親的另一個女兒|Li3ZEAAAQBAJ|林向陽
+永受尊崇的主|ortfCgAAQBAJ|蘇如茵
+玄學大搜查|7aeaCgAAQBAJ|陳國偉
+生生之道|h8ZyCgAAQBAJ|陳愛光 [主編];呂紹昌 [主編];謝挺 [主編]|正道福音神學院二十週年學術論文集
+生命知恩同行十五載|ItonEAAAQBAJ|樓恩德牧師，基督教尖沙咀潮人生命堂
+生命啟動生命|Z9SdDAAAQBAJ|陳志耀 Tommy
+生命關懷系列1|1wGGCgAAQBAJ|鄺炳釗
+生命關懷系列2|SQOGCgAAQBAJ|鄺炳釗
+生命關懷系列3|4ASGCgAAQBAJ|鄺炳釗
+用愛看世界|jaokDAAAQBAJ|關莙玉
+申命記：受教與蒙福|DcqLDAAAQBAJ|郭鴻標
+丟人現眼的福音派|_S9DCgAAQBAJ|賽德（Ronald J. Sider）
+全然成聖|F5GaCgAAQBAJ|陳國偉
+再向苦路行|P--oDwAAQBAJ|葉福成 [作者];莫瑞英 [作者]
+再思救贖奇恩|X01WEAAAQBAJ|慕理（John Murray）
+同行無界|eCdiEAAAQBAJ|葉福成 [作者];莫瑞英 [作者]|從聖經學習攜手面對風浪
+回教與基督教的研究|Ou9bCgAAQBAJ|陳潤棠
+在商言傷|BKCgCwAAQBAJ|劉帝傑|做個職場快樂人
+在港巴裔散聚宣教事工|Fag2DwAAQBAJ|溫以諾 [作者];區寶儀 [作者]
+在聖靈裏的生命|gitDCgAAQBAJ|巴刻（J. I. Packer）
+好媽媽教出好兒子|Z682DwAAQBAJ|李曼博士
+如何有大的信心|JpaaCgAAQBAJ|陳國偉
+如何活用九型圖|zyxDCgAAQBAJ|鄺炳釗
+如何經歷神的同在|zCtDCgAAQBAJ|鄺炳釗
+如何邁向真成功|OyxDCgAAQBAJ|鄺炳釗
+如明光照耀|k_9rCgAAQBAJ|許宏度|突破信仰的瓶頸
+守護在生死邊緣的孩子：同行者手記|Em-pDwAAQBAJ|吳嫣琳
+此情不渝|hco9CwAAQBAJ|歐啟文
+约翰福音的别世真谛（学员本）|tSGBDwAAQBAJ|Paul K. Lee
+约翰福音的别世真谛（教师本）|uSGBDwAAQBAJ|Paul K. Lee
+自由中的約束|yhk4CwAAQBAJ|曾立華|論教牧倫理與品格
+自欺欺神|jU1WEAAAQBAJ|田艾索夫（Gregg Ten Elshof）
+行公義，從心出發|i3CwEAAAQBAJ|拉伯頓（Mark Labberton）|用耶穌的眼睛關愛鄰舍
+伴你翱翔|1EiwEAAAQBAJ|艾力．畢德生（Eric E. Peterson） [作者];尤金．畢德生（Eugene H. Peterson） [作者]|逆風牧者尤金．畢德生給兒子的情深話
+伴我耕耘|3kiwEAAAQBAJ|艾力‧畢德生（Eric E. Peterson）|深耕牧者艾力．畢德生給教會的情深話
+但以理書文學註釋：活出盼望|MZ84CwAAQBAJ|黃儀章
+但以理書靈拾|bVM9CwAAQBAJ|何照洪
+何西阿書：長遠受苦的愛|fypDCgAAQBAJ|蘇穎智
+何西阿書講義|_lI9CwAAQBAJ|陳終道
+你的神祇，我的上帝?|JqvrCgAAQBAJ|歐力仁
+希伯來書：完全的救主與全備的救恩|6ylDCgAAQBAJ|蘇穎智
+希伯來詩歌詮釋|8vhtDwAAQBAJ|吳仲誠|理論與實踐
+弟兄靈修|ILI4CwAAQBAJ|黎永明 [其他]
+快樂是一種生活方式|iS1DCgAAQBAJ|米勒（Frank Minirth）
+快樂是一種選擇|WipDCgAAQBAJ|米勒（Frank Minirth） [作者];米爾（Paul Meier） [作者]
+我与神亲密吗？属灵探热针续集|suxZEQAAQBAJ|杨陈惠敏（Yeung Chan Wai Man Candy）
+我心安穩|-BcxEAAAQBAJ|貝思‧穆爾 (Beth Moore )
+我的心向神敞開|2W-wEAAAQBAJ|貝內爾 (David G. Benner)|聖言誦禱與禱告人生
+我信我行|x3hVCgAAQBAJ|楊慶球 [作者];朱麗娟 [作者]|屬靈成長階梯
+我們從這裡說起|urQ4CwAAQBAJ|符碧珊，張炳玲，莊婉芬，趙潔儀，鄧子俊，姚以靈
+我與神親密嗎？屬靈探熱針續集|OdQdEQAAQBAJ|楊陳惠敏
+抉擇與代價|HC5DCgAAQBAJ|許道良|簡明基督教十字架倫理
+每日箴言|GeNCCgAAQBAJ|蘇穎智|門徒的座右銘
+求祢使我痊愈|iag2DwAAQBAJ|葉福成 [作者];莫瑞英 [作者]
+男人與工作|M3NsCgAAQBAJ|曾立煌
+男人與性|ocqLDAAAQBAJ|曾立煌
+男人與怒氣|xHJsCgAAQBAJ|曾立煌
+男人與健康|KnBsCgAAQBAJ|曾立煌
+男人與憂鬱|onNsCgAAQBAJ|曾立煌
+系統神學（卷伍）聖靈論|5QPwCgAAQBAJ|章力生
+系統神學（卷叁）人類論|UQPwCgAAQBAJ|章力生
+系統神學（卷柒）教會論|wwTwCgAAQBAJ|章力生
+系統神學（卷捌）末世論|DQXwCgAAQBAJ|章力生
+系統神學（卷陸）救恩論|CgTwCgAAQBAJ|章力生
+系統神學（卷壹）聖道論|vQLwCgAAQBAJ|章力生
+系統神學（卷貳）上帝論|BwPwCgAAQBAJ|章力生
+系統神學（卷肆）基督論|mwPwCgAAQBAJ|章力生
+享有永生的信仰真理（学员本）|iSGBDwAAQBAJ|Paul K. Lee
+享有永生的信仰真理（教师本）|jyGBDwAAQBAJ|Paul K. Lee
+兒童品格聖經—新譯本：新約篇（中英對照） 繁體|6odZEAAAQBAJ|杜嘉
+兒童品格聖經—新譯本：新約篇（中英對照） 簡體|WYhZEAAAQBAJ|杜嘉
+兒童品格聖經—新譯本：舊約篇（中英對照） 繁體|Z2xZEAAAQBAJ|杜嘉
+兒童品格聖經—新譯本：舊約篇（中英對照） 簡體|hWxZEAAAQBAJ|杜嘉
+和平之子|OWDAEAAAQBAJ|陳國偉
+奇異姻典|asSLDAAAQBAJ|葉福成 [作者];莫瑞英 [作者]|聖經夫婦今讀
+姊妹靈修1|4PxUCwAAQBAJ|李耀全、胡傑興、莫江庭等
+姊妹靈修2|y9KDCgAAQBAJ|環球聖經公會
+孤獨的神|y3KwEAAAQBAJ|衛爾斯（David F. Wells）|後現代的福音派信仰危機
+居末卻不微末|WPv6DwAAQBAJ|岑紹麟|希伯來書、大公書信及啟示錄導論
+帖撒羅尼迦書信：末世風情畫|NipDCgAAQBAJ|蕭楚輝
+延展視界|QKFBEAAAQBAJ|何世傑（Sai-kit Ho）|崇拜與群體德行陶塑
+彼得前後書、猶大書：亂世驚情中的持守|ZwJ2CgAAQBAJ|曾立華
+性倫理|LbGaCgAAQBAJ|陳國偉|經文精選
+拉比釋經第一堂課：五經在線|cLnLBgAAQBAJ|陳文紀
+拉比釋經第二堂課：詩情哲思|t2XIBgAAQBAJ|陳文紀
+拉比靈修：最後的一堂課|06KTCgAAQBAJ|陳文紀
+放下自己──哥林多教會的解藥|5jTTCgAAQBAJ|陳維進|哥林多前書釋義
+明曉爾道：釋經講道手冊|dRn7DwAAQBAJ|黃天逸
+服事別人――為哥林多教會擺上|xDXTCgAAQBAJ|陳維進|哥林多後書釋義
+東西方的人生智慧觀|jfJbCgAAQBAJ|陳俊偉 [編輯];謝文郁 [編輯];樊美筠 [編輯]
+牧師和教師：論滕近輝對香港華人教會神學思想和教牧領導模式的影響|7AvhDwAAQBAJ|高明發
+育善在家|Dt9CCgAAQBAJ|區應毓 [作者];溫育德 [作者];方悅 [作者]|孩子價值觀之建立
+俗世洪流中的堅信：從教牧書信看顛覆現實的基督信仰|6_0xEAAAQBAJ|鮑維均
+保守我，引導我|D3s4CwAAQBAJ|巴刻、凱奈絲
+信仰不是講感覺|Ob1fCgAAQBAJ|梁家麟
+信仰尋找明白|scOLDAAAQBAJ|蘇遠泰|古老信仰問題，後現代解答
+信仰尋找明白 2|_uVCCgAAQBAJ|蘇遠泰 [作者];鄒賢程 [作者]|做個動腦筋的基督徒
+信而後行：初信須知|UjZxCgAAQBAJ|金新宇 [作者];聶錦勳 [作者]
+勇闖七重山|qic4CwAAQBAJ|彭順強
+南十字星下的故事|CrSBCwAAQBAJ|黃建輝牧師
+哈巴谷書：從疑惑到信靠（組長本）|4xr7DwAAQBAJ|周燕屏傳道
+哈巴谷書：從疑惑到信靠（組員本）|3Es6EAAAQBAJ|周燕屏
+孩子成才攻略前傳|dEhMDAAAQBAJ|黃妹
+孩子的路自己走|Q5CgCwAAQBAJ|小麥子
+宣教心|V7a7EAAAQBAJ|龍維耐 [作者];蕭念全 [作者]
+按時分糧：邁向 真、善、美 實用講道法|4wnhDwAAQBAJ|許道良
+是否永不滅亡（增訂版）|z82LDAAAQBAJ|陳終道
+活出復活的生命|BhgxEAAAQBAJ|畢德生（Eugene H. Peterson）
+活出智慧人生|iONCCgAAQBAJ|黃儀章|舊約智慧書信息研究
+為父召命的豐盛|9-NCCgAAQBAJ|區祥江|父親培育兒子之道
+為成長說故事|Qj5tDwAAQBAJ|黃天逸
+為何信徒離棄神|fqeaCgAAQBAJ|陳國偉
+為家庭說故事|TpQ7EAAAQBAJ|黃天逸
+為神拓疆的工匠|VYZZEAAAQBAJ|柯立天 (Richard Cook)|23位貫穿教會歷史的精品人物
+為婚姻說故事|vUHiEAAAQBAJ|黃天逸|Marriage Story: A Perspective on Attachment Theory
+珍愛你的枕邊人|c4FVCgAAQBAJ|麥格道（Douglas Mcmurry） [作者];胡艾弗（Everett Worthington） [作者];徐美珍 [譯者]|如何鞏固你的婚姻
+相伴一生：婚前輔導伴侶手冊|QbeoDwAAQBAJ|黃天逸
+相伴一生：婚前輔導實務手冊|FumdDwAAQBAJ|黃天逸
+看哪！完全的主基督|pOBCCgAAQBAJ|蘇穎智|再思基督論
+秋天的足印：下半場的困局與出路|oMdbCgAAQBAJ|區祥江
+突破科技文化感染力|hDM4CwAAQBAJ|劉帝傑
+約拿書靈拾|ZaGBCwAAQBAJ|何照洪
+約書亞記：大時代的屬靈爭戰|25o4CwAAQBAJ|張慕皚
+約翰福音：道成肉身賜永生|nsmLDAAAQBAJ|張永信
+約翰福音文學註釋|uaugCwAAQBAJ|孫寶玲
+約翰福音默想式生命讀經|azEhEAAAQBAJ|陳興蘭|從讀經、解經、查經到講道
+約翰福音靈拾|iqGBCwAAQBAJ|何照洪
+耶和華見證人的真相|XeFCCgAAQBAJ|安克伯 [作者];韋爾登 [作者]
+耶稣使徒传承的信经（学员本）|lyGBDwAAQBAJ|Paul K. Lee
+耶稣使徒传承的信经（教师本）|pSGBDwAAQBAJ|Paul K. Lee
+耶稣教导的别世之道（学员本）|MSCBDwAAQBAJ|Paul K. Lee
+耶稣教导的别世之道（教师本）|cSGBDwAAQBAJ|Paul K. Lee
+耶穌+零=一切|t444CwAAQBAJ|查維金 (Tullian Tchividjian) [作者];陳錦榮 [譯者]
+耶穌基督的神蹟|Gc6LDAAAQBAJ|陳終道
+耶穌眼中的真門徒|pbg2DwAAQBAJ|派博（John Piper）
+苦與樂|eROGCgAAQBAJ|李耀全 [作者];麥基恩 [作者];陳玉麟 [作者]
+苦難時刻的靈性操練：心的安慰－－以賽亞書1至39章靈修信息|8nnjEAAAQBAJ|彭怡珍
+说地谈天，论时事想天国|rBXwCgAAQBAJ|呂紹昌
+重尋聖潔|C3dVCgAAQBAJ|巴刻（J. I. Packer）
+重新認識屬靈爭戰|CRQyDAAAQBAJ|麥啟新|聖經研究、心理治療和心靈醫治的整合
+重整現實的敬拜|1G8yEQAAQBAJ|鮑維均
+韋斯敏斯德小要理問答|KVU9CwAAQBAJ|陳少蘭、李淑婷 [編輯]
+韋斯敏斯德信仰宣言（簡體版）|klM9CwAAQBAJ|陳少蘭、李淑婷 [編輯]
+風聞有祢|UDNDCgAAQBAJ|麥寶琳（小麥子）
+個人佈道錦囊|3_0xEAAAQBAJ|黃學齡|增訂版
+凌雪主恩|OjgNEAAAQBAJ|凌陳雪芳
+原文讀經好處多|G6g2DwAAQBAJ|羅羚 [作者];羅達理 [作者]|五十個釋經範例，讓你愛上原文讀經
+哲道反思|KZeaCgAAQBAJ|陳國偉|評論李天命的哲道
+唇齒相依|E-FCCgAAQBAJ|張永信|教會關顧輔導
+差傳印記|s-VCCgAAQBAJ|嚴鳳山
+差傳睇真啲|AqadDAAAQBAJ|朱昌錂|十三個宣教熱門課題的迷思
+差傳點點心|TKadDAAAQBAJ|朱昌錂
+恐龍絕種的真相|3A-MDAAAQBAJ|莫約翰 [作者];韓勤 [作者]
+恩上家恩|2OVCCgAAQBAJ|葉福成 [作者];莫瑞英 [作者]|從聖經看如何建立美滿家庭
+恩約永續|KaD6DwAAQBAJ|梁潔瓊|舊約神學解讀
+恩情神學|_6c2DwAAQBAJ|溫以諾|跨科際研究與應用
+挪亞方舟、挪亞洪水|0xr7DwAAQBAJ|莫約翰（John D. Morris）
+校長生涯的歷煉|SDgNEAAAQBAJ|賀國強
+栽在溪水旁的生命|REBtDwAAQBAJ|龍胡啟芬|詩篇選讀
+病痛中有主扶持|R6GaCgAAQBAJ|陳國偉
+真相|F6yBCwAAQBAJ|随风|人心最隐秘的渴望
+破冰船|8kiwEAAAQBAJ|龍蕭念全、龍祈申等|與移居家庭同航
+神的主權與恩典|sxn7DwAAQBAJ|蘇立忠|《始於神》創世記神學與生活靈修反思
+神為何袖手旁觀?|4f0xEAAAQBAJ|簡嘉露（Carol Kent）
+神國的人力資源|66OgCwAAQBAJ|蘇文隆 [作者];陳肇兆 [顧問編輯]
+神聖擁抱|lOhbCgAAQBAJ|韋柏（Robert E. Webber）|重尋熱情洋溢的屬靈生命
+神學大哉問（簡體版）|TNFtDwAAQBAJ|駱德恩|護教式系統神學
+神學方法論|AKugCwAAQBAJ|陳俊偉
+神學的哲學基礎|9CxDCgAAQBAJ|楊慶球
+神學是一場跨世紀交流的盛筵|VeViEAAAQBAJ|戴德理（G. Wright Doyle）|20世紀殿堂級神學家卡爾．亨利與21世紀信徒的對談
+祢的話語，我的禱告|9BcxEAAAQBAJ|貝思‧穆爾 (Beth Moore )|攻破屬靈生命中的堅壘
+祢的話語，我的禱告：每日靈修版|5f0xEAAAQBAJ|貝思‧穆爾 (Beth Moore )
+追擊瑜伽真相|9yg4CwAAQBAJ|嚴鳳山
+馬太福音：願你的旨意行在地上|XO5bCgAAQBAJ|周貴發
+馬可福音（卷上）|48QeDQAAQBAJ|張永信
+馬可福音（卷下）|I8IeDQAAQBAJ|張永信
+健康教會全模式暨校內堂會攻略|yqTrCgAAQBAJ|蔡蔭強
+基督教不可信？|ZuRCCgAAQBAJ|楊慶球|兼駁《哲道行者》
+基督教身分尋索|jKOTCgAAQBAJ|盧龍光|使徒行傳和新約書信導論
+基督教倫理與自由世俗社會|ZxVsCgAAQBAJ|關啟文
+基督教神學初探（簡體版）|ZzEhEAAAQBAJ|索爾森（Don Thorsen）||ara
+基督教與現代社會的爭論|BjNDCgAAQBAJ|關啟文 [編輯];蔡志森 [編輯]|道德、政治與「宗教右派」
+基礎系統神學──真理與信仰體驗的整理|kj8NEAAAQBAJ|楊慶球
+婆說婆有理|KPltDwAAQBAJ|朱昌錂
+婚前輔導DIY|wXZVCgAAQBAJ|區祥江
+崇拜──神學、實踐、更新 (增訂版)|sORCCgAAQBAJ|張永信
+得著處世的智慧|R_d8CwAAQBAJ|黃天相|猶太傳統的啟廸
+從唯物、唯法、唯釋到唯獨基督|2vZtDwAAQBAJ|陳德修|憂國憂民章力生
+從聖經看如何活得更快樂|rwakBwAAQBAJ|鄺炳釗|豐盛生命系列
+從聖經看如何處理失敗、羞愧、罪咎|sPhtDwAAQBAJ|鄺炳釗
+從聖經看如何處理傷害和迫害|MvWjBwAAQBAJ|鄺炳釗|豐盛生命系列
+從聖經看如何處理憂慮和恐懼|nN7nBgAAQBAJ|鄺炳釗|豐盛生命系列
+從聖經看如何認識和提升自己|O_ijBwAAQBAJ|鄺炳釗|豐盛生命系列
+從聖經看金錢|Pp6aCgAAQBAJ|陳國偉
+從警察故事看職場事奉|9Ax2CgAAQBAJ|龔柏成
+從靈說起|pEp_CgAAQBAJ|Chloe Tse Sun [其他];陳愛光 [其他]|正道福音神學院二十五週年學術論文集
+情理兼備讀經法|V6g2DwAAQBAJ|黎永明|助你讀經轉化生命
+啟示與文字|IaD6DwAAQBAJ|唐子明|中文聖經翻譯的故事（1807-1919）
+啟示錄：從黑暗到光明|xilDCgAAQBAJ|蘇穎智
+教會生活大翻新|mbCaCgAAQBAJ|陳國偉
+教會教義學（卷一）神道論（一）|8Uc6EAAAQBAJ|卡爾．巴特 (Karl Barth)|§ 1-7 神的道作為教義學的標準
+教會教義學（卷一）神道論（二）|80c6EAAAQBAJ|卡爾．巴特 (Karl Barth)|§ 8-12 神的啟示：三位一體的神
+教會教義學（卷一）神道論（三）|-lyjEAAAQBAJ|卡爾．巴特 (Karl Barth)|§13-15 神的啟示：成了肉身的道
+教會領袖為何跌倒？|x2-wEAAAQBAJ|羅拉莫（Clyde M. Narramore）
+異端辨惑|0-NCCgAAQBAJ|蘇穎智
+眼有光，心快樂|vZeaCgAAQBAJ|陳國偉
+第二聖殿猶太教導論|aD5tDwAAQBAJ|梁美心
+許多諒解許多愛|O-JCCgAAQBAJ|林治生|聖經中的家庭
+這次我們遇上了|SVM9CwAAQBAJ|趙潔儀 [作者];區祥江 [作者];鄧子俊 [作者]
+通靈的真相|YeJCCgAAQBAJ|安克伯 [作者];韋爾登 [作者]
+都市人的靈命塑造|YqgkDAAAQBAJ|蔡貴恆 [作者];崔妙姍 [作者]
+都市男女要懂的中醫常識|lZ-gCwAAQBAJ|李頴儀醫師
+陰霾時代的曙光|eRn7DwAAQBAJ|何啟明|以斯帖記釋經敘事講道
+創世記漫畫|3LfsDQAAQBAJ|葉一一 [插圖畫家]
+創造神學與人生|Gag2DwAAQBAJ|黎永明 [作者];陳文紀 [作者];楊錫鏘 [作者];張祥志 [作者]
+創造神學與職場|LEFtDwAAQBAJ|楊錫鏘 [作者];黃讚雄 [作者]
+喜悅靈修|iB6kBwAAQBAJ|譚晴
+單身起義|cjJDCgAAQBAJ|科倫（Christine A. Colón） [作者];菲爾特（Bonnie E. Field） [作者]|獨身與教會生活的再思
+尋找心靈的家鄉|z2-wEAAAQBAJ|巴恩斯（M. Craig Barnes）
+尋找豐盛生命|F-aLDAAAQBAJ|葉漢浩|如何在資本主義社會中分享豐盛生命
+復和萬有|0XCwEAAAQBAJ|加東高莉（Emmanuel Katongole） [作者];賴斯（Chris Rice） [作者]|正義、和平與醫治的基督徒願景
+提摩太前後書：給新一代領袖的叮嚀|t8WLDAAAQBAJ|張永信
+散聚宣教學|Eag2DwAAQBAJ|溫以諾 [作者];龔文輝 [作者]|北美個案研究
+普天注释：但以理书（简体版）|bw_LEAAAQBAJ|邝炳钊
+普天注释：彼得后书・犹大书（简体版）|CsbHEAAAQBAJ|张略
+普天注释：罗马书（简体版）|diDHEAAAQBAJ|鲍会园
+普天註釋：士師記|e-2GDwAAQBAJ|曾祥新
+普天註釋：士師記（簡體版）|IoLJEAAAQBAJ|曾祥新
+普天註釋：以西結書|fAvhDwAAQBAJ|唐佑之
+普天註釋：以西結書（簡體版）|dcTIEAAAQBAJ|唐佑之
+普天註釋：以斯帖記|ctFtDwAAQBAJ|蔡金玲
+普天註釋：以斯帖記（簡體版）|7IHJEAAAQBAJ|蔡金玲
+普天註釋：以斯拉記・尼希米記（簡體版）|DePIEAAAQBAJ|区应毓 [作者];邵晨光 [作者]
+普天註釋：以斯拉記‧尼希米記|Lkw6EAAAQBAJ|區應毓 [作者];邵晨光 [作者]
+普天註釋：以賽亞書（卷上）|7f0xEAAAQBAJ|呂紹昌 [作者];吳獻章 [作者]
+普天註釋：以賽亞書（卷上）（簡體版）|LHPKEAAAQBAJ|吕绍昌 [作者];吴献章 [作者]
+普天註釋：以賽亞書（卷下）|-f0xEAAAQBAJ|吳獻章
+普天註釋：以賽亞書（卷下）（簡體版）|sHXKEAAAQBAJ|吴献章
+普天註釋：出埃及記|riDHEAAAQBAJ|賴建國
+普天註釋：出埃及記（簡體版）|sCDHEAAAQBAJ|賴建國
+普天註釋：加拉太書・以弗所書（簡體版）|QNfJEAAAQBAJ|岑绍麟 [作者];黎惠康 [作者]
+普天註釋：加拉太書‧以弗所書|0Ek6EAAAQBAJ|岑紹麟 [作者];黎惠康 [作者]
+普天註釋：民數記|uCHHEAAAQBAJ|曾祥新
+普天註釋：民數記（簡體版）|LCLHEAAAQBAJ|曾祥新
+普天註釋：申命記|WjfHEAAAQBAJ|劉少平
+普天註釋：申命記（簡體版）|bDfHEAAAQBAJ|刘少平
+普天註釋：列王紀上|_f0xEAAAQBAJ|李保羅
+普天註釋：列王紀上（簡體版）|WabKEAAAQBAJ|李保罗
+普天註釋：列王紀下|__0xEAAAQBAJ|李保羅
+普天註釋：列王紀下（簡體版）|YabKEAAAQBAJ|李保罗
+普天註釋：但以理書|ZtFtDwAAQBAJ|鄺炳釗
+普天註釋：何西阿書・約珥書・阿摩司書（簡體版）|LtHJEAAAQBAJ|刘少平
+普天註釋：何西阿書‧約珥書‧阿摩司書|GzcNEAAAQBAJ|劉少平
+普天註釋：利未記|ICupDwAAQBAJ|洪同勉
+普天註釋：利未記（簡體版）|gRbLEAAAQBAJ|洪同勉
+普天註釋：希伯來書|gtFtDwAAQBAJ|馮蔭坤
+普天註釋：希伯來書（簡體版）|AILJEAAAQBAJ|冯荫坤
+普天註釋：使徒行傳|myW1DwAAQBAJ|張永信
+普天註釋：使徒行傳（簡體版）|OILJEAAAQBAJ|张永信
+普天註釋：帖撒羅尼迦前後書|MyW1DwAAQBAJ|馮蔭坤
+普天註釋：帖撒羅尼迦前後書（簡體版）|zgnIEAAAQBAJ|冯荫坤
+普天註釋：彼得後書・猶大書|-QnhDwAAQBAJ|張略
+普天註釋：俄巴底亞書・約拿書・彌迦書・那鴻書（簡體版）|znbKEAAAQBAJ|谢慧儿 [作者];胡维华 [作者]
+普天註釋：俄巴底亞書‧約拿書‧彌迦書‧那鴻書|NzcNEAAAQBAJ|謝慧兒 [作者];胡維華 [作者]
+普天註釋：哈巴谷書・西番雅書・哈該書・撒迦利亞書・瑪拉基書（簡體版）|EJDKEAAAQBAJ|黄天相 [作者];唐佑之博士 [作者]
+普天註釋：哈巴谷書‧西番雅書‧哈該書‧撒迦利亞書‧瑪拉基書|dzEhEAAAQBAJ|黃天相 [作者];唐佑之 [作者]
+普天註釋：約伯記|LEw6EAAAQBAJ|唐佑之
+普天註釋：約伯記（簡體版）|FMzJEAAAQBAJ|唐佑之
+普天註釋：約書亞記|eEw6EAAAQBAJ|張玉明
+普天註釋：約書亞記（簡體版）|_CPKEAAAQBAJ|张玉明
+普天註釋：約翰壹貳叁書|iiDHEAAAQBAJ|吳道宗
+普天註釋：約翰壹貳叄書（簡體版）|kiDHEAAAQBAJ|吴道宗
+普天註釋：約翰福音|Qm-pDwAAQBAJ|鍾志邦
+普天註釋：約翰福音（簡體版）|vovJEAAAQBAJ|钟志邦
+普天註釋：耶利米書・耶利米哀歌（簡體版）|PozJEAAAQBAJ|唐佑之
+普天註釋：耶利米書‧耶利米哀歌|cTEhEAAAQBAJ|唐佑之
+普天註釋：哥林多前後書|1Ek6EAAAQBAJ|黃浩儀 [作者];何善斌 [作者];張達民 [作者];陳濟民 [作者]
+普天註釋：哥林多前後書（簡體版）|k6bKEAAAQBAJ|黄浩仪 [作者];何善斌 [作者];张达民 [作者];陈济民 [作者]
+普天註釋：馬太福音|kgvhDwAAQBAJ|黃鴻興
+普天註釋：馬太福音（簡體版）|6MzJEAAAQBAJ|黄鸿兴
+普天註釋：馬可福音|uPv6DwAAQBAJ|葉雅蓮
+普天註釋：馬可福音（簡體版）|w-_JEAAAQBAJ|叶雅莲
+普天註釋：啟示錄|Pm-pDwAAQBAJ|鮑會園
+普天註釋：啟示錄（簡體版）|eiDHEAAAQBAJ|鲍会园
+普天註釋：教牧書信|GiupDwAAQBAJ|張永信
+普天註釋：教牧書信（簡體版）|nG_JEAAAQBAJ|张永信
+普天註釋：創世記|hAvhDwAAQBAJ|鄺炳釗
+普天註釋：創世記（簡體版）|TI_JEAAAQBAJ|邝炳钊
+普天註釋：腓立比書|GD9yDwAAQBAJ|馮蔭坤
+普天註釋：腓立比書（簡體版）|kNjHEAAAQBAJ|冯荫坤
+普天註釋：雅各書・彼得前書|H_6oDwAAQBAJ|梁康民 [作者];張永信 [作者];張略 [作者]
+普天註釋：雅各書・彼得前書（簡體版）|lcTIEAAAQBAJ|梁康民 [作者];张永信 [作者];张略 [作者]
+普天註釋：詩篇（卷上）|hTEhEAAAQBAJ|張國定
+普天註釋：詩篇（卷上）（簡體版）|s6bKEAAAQBAJ|张国定
+普天註釋：詩篇（卷下）|EhgxEAAAQBAJ|張國定
+普天註釋：詩篇（卷下）（簡體版）|hsDKEAAAQBAJ|张国定
+普天註釋：路加福音|VSW1DwAAQBAJ|鮑維均
+普天註釋：路加福音（簡體版）|JePIEAAAQBAJ|鲍维均
+普天註釋：路得記|mtFtDwAAQBAJ|周永健
+普天註釋：路得記（簡體版）|ocTIEAAAQBAJ|周永健
+普天註釋：歌羅西書・腓利門書|ojjHEAAAQBAJ|鮑會園 [作者];黃浩儀 [作者]
+普天註釋：歌羅西書・腓利門書（簡體版）|pjjHEAAAQBAJ|鲍会园 [作者];黄浩仪 [作者]
+普天註釋：撒母耳記上|2Es6EAAAQBAJ|詹正義
+普天註釋：撒母耳記上（簡體版）|xtrKEAAAQBAJ|詹正义
+普天註釋：撒母耳記下|3ks6EAAAQBAJ|梁潔瓊
+普天註釋：撒母耳記下（簡體版）|AtvKEAAAQBAJ|梁洁琼
+普天註釋：箴言・傳道書・雅歌|lgvhDwAAQBAJ|梁薇 [作者];吳獻章 [作者];黃朱倫 [作者]
+普天註釋：箴言・傳道書・雅歌 （簡體版）|Ks3JEAAAQBAJ|梁薇（Barbara M. Leung Lai） [作者];吴献章 [作者];黄朱伦 [作者]
+普天註釋：歷代志上|LTcNEAAAQBAJ|區應毓
+普天註釋：歷代志上（簡體版）|8HXKEAAAQBAJ|区应毓
+普天註釋：歷代志下|NTcNEAAAQBAJ|區應毓
+普天註釋：歷代志下（簡體版）|NHbKEAAAQBAJ|区应毓
+普天註釋：羅馬書|9j5yDwAAQBAJ|鮑會園
+智慧設計的當代爭論|AUU4CwAAQBAJ|關啟文、陳海智、湯靈磐、譚振基 [顧問編輯]
+智慧設計論|u3CwEAAAQBAJ|鄧勃斯基（William A. Dembski）|科學與神學之橋
+朝聖心曲|QsAeDQAAQBAJ|郭鴻標|崇拜與聖樂對靈命成長的作用
+植根生活的信仰|rsKLDAAAQBAJ|梁家麟
+渴想主來|vwPZEAAAQBAJ|陳愛光、羅羚 [編輯];雷雪倫Sharon Lei [作者];陳兵Bing Chen [作者];劉英華Leonard Liu [作者];陳錦友Alan Chan [作者];陳敦康Tony Chen [作者];張秀斌Xiubin Zhang [作者];梁美心Mavis M. Leung [作者];羅羚Mary Luo [作者];黃鴻興Hing Wong [作者];薛霞霞Xiaxia Xue [作者];吳維和John Wu [作者]
+無心插柳|u6adDAAAQBAJ|朱昌錂|中華福音使命團的故事
+猶大福音與新約旁經|QeMuEAAAQBAJ|禤浩榮
+筆戰羅馬|M46aCgAAQBAJ|盧龍光 [主編]|羅馬書之研究
+等他自己情願：雅歌的愛情故事|lCG1DwAAQBAJ|黃天逸
+給她讚賞|7wnhDwAAQBAJ|葉福成 [作者];莫瑞英 [作者]
+給你，後現代的提摩太|2v5rCgAAQBAJ|曾立華|「提後」信息對新世代屬靈領袖的啟迪
+腓立比書：在患難中成長的生命|bPd8CwAAQBAJ|吳道宗
+舒緩壓頂泰山|bvv6DwAAQBAJ|大衛．普里森（David Powlison） 愛德華．T．韋爾契（Edward T. Welch） 邁克爾．R．埃姆萊特（Michael R. Emlet）
+華麗轉身|k0NtDwAAQBAJ|羅淑芬|生命教練實戰錦囊
+超凡學生手記|8tGdDAAAQBAJ|陳志耀 Tommy
+超凡學生手記2成長藍圖|FNGdDAAAQBAJ|陳志耀 Tommy|給中學生的12堂通識課
+超清福音|g_RtDwAAQBAJ|鄧啟耀|真 ‧ 福音小組查經
+超越王者的足跡|ROVCCgAAQBAJ|樓恩德|從列王故事看人生起跌
+超越與轉化|Pi1DCgAAQBAJ|許道良
+雅各書：聽行並重|ECpDCgAAQBAJ|周貴發
+順風徐行，逆風高飛|GZ6aCgAAQBAJ|陳國偉
+黑繭|W7xfCgAAQBAJ|林向陽
+傳揚基督|c6g2DwAAQBAJ|金新宇 [作者];聶錦勳 [作者]
+傳道人的楷模|uE5WEAAAQBAJ|司徒德（John R. W. Stott）
+愈辯愈明|j0RtDwAAQBAJ|駱德恩|從哲學，科學，歷史論證基督信仰
+愛你沒保留|Yy1DCgAAQBAJ|陳坤德 [作者];黃鴻麟 [作者]
+愛與恨|FR8GDQAAQBAJ|李耀全 [作者];麥基恩 [作者];陳玉麟 [作者]
+愛與恨|nLGaCgAAQBAJ|陳國偉
+新手＠靈修.30 days：約翰福音伴讀|yGZWCwAAQBAJ|李佩雯傳道、李適清傳道、姚紀星傳道等
+新世代領袖的塑造|XStDCgAAQBAJ|曾立華
+新約文學與神學：四福音及耶穌|SwFsEAAAQBAJ|亞德邁耶（Paul J. Achtemeier） [作者];格林（Joel B. Green） [作者];湯瑪恩（Marianne Meye Thompson） [作者]
+新約文學與神學：保羅及其書信|5exmEAAAQBAJ|亞德邁耶（Paul J. Achtemeier） [作者];格林（Joel B. Green） [作者];湯瑪恩（Marianne Meye Thompson） [作者]|Introducing the New Testament: Its Literature and Theology (Part II)
+新約文學與神學：後期著作及背景|VfJmEAAAQBAJ|亞德邁耶（Paul J. Achtemeier） [作者];格林（Joel B. Green） [作者];湯瑪恩（Marianne Meye Thompson） [作者]|Introducing the New Testament: Its Literature and Theology (Part III)
+新約希臘文入門|sseBCwAAQBAJ|吳維和
+新約神學導論|wuZaEAAAQBAJ|鄧雅各 (James D. G. Dunn)
+新約詮釋導介|YvBbCgAAQBAJ|麥克奈特 Scot McKnight [作者];麥陳惠惠 [譯者]
+新寫給父母十個與愛有關的故事|P9OdDAAAQBAJ|陳志耀 Tommy
+新舊約詞彙淺釋|IbagCwAAQBAJ|環球聖經公會
+會晤孤靜|jXCwEAAAQBAJ|路得芭彤 (Barton, R. Ruth)
+會晤神聖|t2-wEAAAQBAJ|白琦（Jeannette A. Bakke）|屬靈導引指南
+會幕|Hk9WEAAAQBAJ|陳志宏|神同在
+極罪之謎|h7g2DwAAQBAJ|派博|滔天大罪與神的旨意
+溪邊樹「影」──當代文化的成長對話|1XKwEAAAQBAJ|謝挺、陳愛光、黃成培 [編輯];劉富理．Felix Liu [作者];蘇文隆．Wilfred Su [作者];李道基．Doug Vavrosky [作者];黃鴻興．Hing Wong [作者];羅羚．Mary Luo [作者];林慈敏．Amy T. Lin [作者];謝挺．Chloe Sun [作者];黃成培．James Hwang [作者];陳愛光．Ekron Chen [作者];柯立天．Richard Cook [作者];彭淑鈴．Shuling Peng [作者];蔡玉玲．Daisy Tsai [作者];吳維和．John Wu [作者];雷雪倫．Sharon Lei [作者];林國亮．Kuo Liang Lin [作者]|正道福音神學院三十週年學術論文集
+當以嘴親子|-uRCCgAAQBAJ|陳錦友|從詩篇結構看其信息
+禁不絕的聖道傳承|SgBWEAAAQBAJ|何啟明 [作者];何鄭惜玉 [作者]|使徒行傳「助人自助」門訓教材
+經濟大變局|Wc-dDAAAQBAJ|陳志耀 Tommy|嶄新投資思維(增訂版)
+聖地風俗習慣|OZYRDQAAQBAJ|韋捷 Fred H. Wight
+聖地綜覽|d0RtDwAAQBAJ|曾維州
+聖經．新約全書──環球聖經譯本（繁體．神字版）（嚮導版）|wjpTEAAAQBAJ|張達民博士 [主編];環球聖經公會 [作者]
+聖經．舊約全書──環球聖經譯本（繁體．神字版）（嚮導版）|C3R8EAAAQBAJ|張達民博士 [主編];環球聖經公會 [作者]|The Holy Bible: Old Testament – Worldwide Chinese Bible（Traditional Character / Shen Edition）
+聖經‧詮釋‧宣講|HZkRDQAAQBAJ|孫寶玲|當代宣講學的理論與實踐
+聖經──環球聖經譯本（繁體．神字版）|Pn7rEAAAQBAJ|張達民 [編輯];賴建國 [編輯]|The Holy Bible: Worldwide Chinese Bible（Traditional Character / Shen Edition）
+聖經不雅嗎？|UZiaCgAAQBAJ|陳國偉|用反面教材簡介釋經學
+聖經快閱通|eyZpDAAAQBAJ|26位華人聖經學者及牧者
+聖經的神學詮釋|KP6jBwAAQBAJ|特雷耶 (Daniel J. Treier)
+聖經金句－金蘋果|BXOwEAAAQBAJ|張燕 [編輯]
+聖經神學・舊約|AupBEAAAQBAJ|霍志恆
+聖經問題解答|6jcxDAAAQBAJ|陳終道
+聖經新辭典（修訂版）|uCIVEAAAQBAJ|馬歇爾 [編輯];米勒德 [編輯];巴刻 [編輯];懷斯曼 [編輯]|New Bible Dictionary, 3rd edition|~
+聖樂綜論 (III)|Xag2DwAAQBAJ|羅炳良
+聖韻靈律|k3CwEAAAQBAJ|路得芭彤 (Barton, R. Ruth)|編寫轉化靈命的生活節奏
+聖靈的工作|986LDAAAQBAJ|陳終道
+聖靈與初期教會|3uNyCgAAQBAJ|黃朱倫
+蛻變教會|BNonEAAAQBAJ|艾德．斯特澤（Ed Stetzer）、湯姆．雷那（Thom Rainer）
+裏外更新|zEk6EAAAQBAJ|克萊布 (Larry Crabb)
+解開萬古常新的聖言|55_6DwAAQBAJ|環球聖經公會
+詩篇默想式生命讀經（上冊）|IZGgCwAAQBAJ|陳興蘭
+詩篇默想式生命讀經（下冊）|__cPDQAAQBAJ|陳興蘭|從讀經、解經、查經到結構欣賞
+詮釋希伯來書|EytDCgAAQBAJ|特羅特（Andrew H. Trotter）
+詮釋使徒行傳|pSpDCgAAQBAJ|李斐德（Walter L. Liefeld）
+詮釋保羅書信|rPBbCgAAQBAJ|施賴納（Thomas R. Schreiner） [作者];石彩燕 [譯者];麥啟新 [譯者]
+詮釋約翰福音|OCtDCgAAQBAJ|伯奇（Gary M. Burge）
+詮釋啟示錄|pytDCgAAQBAJ|邁克爾斯（J. Ramsey Michaels）
+詮釋符類福音|w6qHCgAAQBAJ|麥克奈特（Scot McKnight） [作者];麥陳惠惠 [譯者];麥啟新 [譯者];林少玲 [譯者]
+跨越：傾聽安寧者心聲的五課|Om-pDwAAQBAJ|陳偉雄
+跨越人生|4KciDAAAQBAJ|劉彤
+跨越的時刻|KqgiDAAAQBAJ|劉彤
+路|eiEQDQAAQBAJ|陳終道
+路得記靈拾|-aGBCwAAQBAJ|何照洪
+遇上彩色的自己|S5-gCwAAQBAJ|富察令兒
+遇見耶穌|_udtDwAAQBAJ|余滿華
+道．出愛|KD5tDwAAQBAJ|李可珊 [作者];李成傑 [作者];吳安強 [作者];周婉貞 [作者];孫靜敏 [作者];黃勁梅 [作者];楊芝華 [作者]|約翰福音靈修日誌
+道可道|2C9DCgAAQBAJ|孫寶玲|約翰福音中的宣講與神學
+塵俗靈程|52-wEAAAQBAJ|保羅．史蒂文斯（R. Paul Stevens）|在平凡生活中與神相遇
+滿足心理學|qNGdDAAAQBAJ|陳志耀 Tommy|如何渡過各種人生逆境
+漫畫聖經1：受難編──王者之路|ZmaNDAAAQBAJ|張文偉 [作者];李少奇 [其他]
+漫畫聖經2：受難後編──苦難之路|jmeNDAAAQBAJ|張文偉 [作者];李少奇 [其他]
+疑惑與相信|VNFtDwAAQBAJ|許道良|基督教衛道學入門
+盡你的心智愛神|bzFDCgAAQBAJ|關啟文 [編輯];張穎珊 [編輯];吳永康 [編輯]|基督教世界觀初探
+福臨中華|yeBCCgAAQBAJ|梁家麟|中國近代教會史十講
+精煉舊約|9ItGEAAAQBAJ|吳獻章|文體、信息、生活、事奉的融貫
+綠踪同遊|b6g2DwAAQBAJ|何建宗
+與彼得同讀舊約|E0g6EAAAQBAJ|譚志超|彼得前書的彌賽亞「新時代」
+與政府共舞|Kv1UCwAAQBAJ|陳國偉
+與家庭共舞：活出真情真愛（組長本）|aaxXCwAAQBAJ|李耀全（兼主編）、白智信、譚廣海、何志彬
+與家庭共舞：活出真情真愛（組員本）|VlprCwAAQBAJ|李耀全、白智信、譚廣海、何志彬
+與恩主同行：活出活潑盼望﹙組長本﹚|4fl8CwAAQBAJ|陳鴻耀、曾景恒、何志彬
+與恩主同行：活出活潑盼望（組員本）|Jvh8CwAAQBAJ|陳鴻耀、曾景恒、何志彬 [作者];李耀全 [主編]
+與恩主相遇：活出敬虔信仰（組長本）|AJppCwAAQBAJ|朱美娟、陳月蓮、何志彬
+與恩主相遇：活出敬虔信仰（組員本）|iZBrCwAAQBAJ|朱美娟、陳月蓮、何志彬||~
+與逆境共舞|ac9zEQAAQBAJ|史丹利
+與情緒共舞：走出人生陰霾（組長本）|F51XCwAAQBAJ|朱美娟、陳月蓮、雷小龍、何志彬 [作者];李耀全 [編輯];陳少蘭、李淑婷 [編輯]
+與情緒共舞：走出人生陰霾（組員本）|oaZXCwAAQBAJ|朱美娟、陳月蓮、雷小龍、何志彬 [作者];李耀全 [編輯];陳少蘭、李淑婷 [編輯]
+與情緒共舞：躍出人生低谷（組長本）|AVQ9CwAAQBAJ|李耀全、何志彬、王德福、梁朱美娟 [作者];陳少蘭、胡文芳 [編輯]
+與情緒共舞：躍出人生低谷（組員本）|S1Q9CwAAQBAJ|李耀全、何志彬、王德福、梁朱美娟 [作者];陳少蘭 [編輯]
+與難纏人共舞|UpQ7EAAAQBAJ|帕羅特（Les Parrott III）
+說地談天，論時事想天國|zxTwCgAAQBAJ|呂紹昌（Jeffrey Shao-chang Lu）
+領導話領導|Hy9DCgAAQBAJ|巴喬治（George Barna） [作者];譚國治 [譯者]
+領導學大檢閱|-C1DCgAAQBAJ|班克斯（Robert Banks） [作者];萊德貝特 （Benice M. Ledbetter） [作者]
+誰可伴我一世過？|hQx2CgAAQBAJ|關德賢
+談天說道系列一：信仰給我⋯⋯|NIkFDQAAQBAJ|符碧珊 [編輯]
+談天說道系列二：信仰給我⋯⋯|ApEFDQAAQBAJ|符碧珊 [編輯]
+談天說道系列三：信仰給我⋯⋯|cZEFDQAAQBAJ|符碧珊 [編輯]
+請你吃聖經|GtonEAAAQBAJ|畢德生（Eugene H. Peterson）
+論盡基督徒|xW-wEAAAQBAJ|大衞．堅立民 (David Kinnaman) [作者];基比．里昂 (Gabe Lyons) [作者]|「八十後」看基督教
+趣味小組查經|1PxrCgAAQBAJ|張修齊
+養生智慧|UrlfCgAAQBAJ|禾榮
+燃亮我生命|eMZbCgAAQBAJ|張永信
+燃亮我生命 2|wsZbCgAAQBAJ|張永信
+燃亮我生命 4|KDJDCgAAQBAJ|張永信
+燃亮我生命3|SDBDCgAAQBAJ|張永信
+獨特與恩慈|5P1VCgAAQBAJ|許道良
+親密時光|qW-wEAAAQBAJ|丹尼斯．雷尼（Dennis Rainey) [作者];巴巴拉．雷尼（Barbara Rainey） [作者]
+親職也革命|7Uc6EAAAQBAJ|巴喬治 ( George Barna )
+駭人聽聞：可恥的十架，榮耀的復活|YqM4CwAAQBAJ|卡森（D. A. Carson）
+總體辯道學（卷一）|1y_TCgAAQBAJ|章力生|基要篇
+總體辯道學（卷二）|w2rtCgAAQBAJ|章力生|哲學篇
+總體辯道學（卷三）|oWvtCgAAQBAJ|章力生|宗教篇
+總體辯道學（卷四）|EGztCgAAQBAJ|章力生|文化篇
+還我屬靈本色|l-lbCgAAQBAJ|彭順強|禱告、讀經、敬拜
+簡易讀經與解經法|9vBbCgAAQBAJ|陳潤棠 [作者];陳金獅 [作者]
+簡約教會|tTEhEAAAQBAJ|湯姆‧雷那（Thom Rainer）、艾力‧蓋格（Eric Geiger）
+職場信徒的靈性操練：心的定位|53CwEAAAQBAJ|彭怡珍|列王紀上靈修信息
+職場美麗人生|N6iaCgAAQBAJ|陳國偉
+舊約中的彌賽亞預言|3JQ9DAAAQBAJ|賴建國
+舊約之彌賽亞|_m6pDwAAQBAJ|聶錦勳
+舊約背景快閱通|izlsEAAAQBAJ|曾祥新 (Jacob C. S. Tsang)
+舊約神學：從創造到新創造|1_1rCgAAQBAJ|黃儀章
+舊約神學：從導論到方法論|dO9ACgAAQBAJ|黃儀章
+舊約神學與信息|yIKaCgAAQBAJ|陳俊偉
+豐采的生命|7hcxEAAAQBAJ|韓克勵 ( K.C. Hinckley ) [作者];潘心慧 [譯者]|基督徒生活指南
+禱告人生|DBgxEAAAQBAJ|保羅‧米勒（Paul Miller）
+關係神學初探|Dag2DwAAQBAJ|溫以諾
+寶訓精義|hbg2DwAAQBAJ|陳終道
+饒恕就是釋放|LJiaCgAAQBAJ|陳國偉
+馨香的事奉|2cSLDAAAQBAJ|鄭藍|林獻羔見證
+屬靈的氣質|DtonEAAAQBAJ|黎曦庭 ( Tim LaHaye )
+屬靈探熱針─屬靈引導模式： 一個檢測和提升屬靈免疫力的新工具|_TYNEAAAQBAJ|楊陳惠敏
+屬靈傳統禮讚|QW-wEAAAQBAJ|傅士德（Richard J. Foster）
+護教式系統神學|Zag2DwAAQBAJ|駱德恩
+闢世樹人|WTEhEAAAQBAJ|葉福成 [作者];莫瑞英 [作者]|創世記文法釋經
+驀地一相逢|UBMyDAAAQBAJ|崔妙姍|一個現代女性的成長與靈程
+魔幻王國的心靈世界|J4ZbCgAAQBAJ|禤浩榮
+權威與綻放|qRn7DwAAQBAJ|唐子明|近代中文聖經翻譯及譯本比較
+靈性操練入門：從心跟隨耶穌-馬可福音靈修信息|75_6DwAAQBAJ|彭怡珍
+靈程歷奇：當我遇上難處時|Mt9CCgAAQBAJ|李耀全
+靈程歷奇主嚮導|X6g2DwAAQBAJ|李耀全
+靈程歷奇創新高|reNCCgAAQBAJ|李耀全
+A貨信徒|z-4wEQAAQBAJ|格羅舍爾（Craig Groeschel）
+Growing Up Global: What a TCK's Life is Like|IX67EAAAQBAJ|Cindy Loong||eng
+Tommy 的LPD® 教育系統|RdWdDAAAQBAJ|陳志耀 Tommy
+Xây Dựng và Phát Triển Phẩm Hạnh Thuộc Linh|cLKdDAAAQBAJ|Dr. Tin Nguyen||vie</pre>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+<p>v.4 · 本地電子書目預覽，非官方交易頁。所有書籍 ID 取自提供的連結；缺少 ID 的書籍不會補猜購買網址。</p>
+<p>「我的書單」僅保存在目前頁面的記憶體中，重新整理後會清除。可使用「匯出我的書單」保存文字檔。嵌入式預覽可能限制外部連結或下載。</p>
+<p>作者介紹屬提供資料的整理摘要，不代表已核實的現任職銜。原始語言欄中的 ara 及空白資料均保留，未擅自更正。</p>
+</div>
+</footer>
+
+<div id="modal" class="modal" hidden="">
+<div class="panel" role="dialog" aria-modal="true" aria-labelledby="detailTitle" tabindex="-1" id="panel">
+<div class="modal-head"><span class="eyebrow">BOOK DETAILS</span><button type="button" id="closeModal" aria-label="關閉詳情">×</button></div>
+<div id="modalContent" class="modal-content"></div>
+</div>
+</div>
+<div id="toast" class="toast" hidden="" role="status"></div>
+
+<script>
+(function () {
+"use strict";
+
+var el = function (id) { return document.getElementById(id); };
+var dataElement = el("bookData");
+var saved = new Set();
+var page = 1;
+var savedOnly = false;
+var listView = false;
+var currentDetail = null;
+var previousFocus = null;
+var toastTimer = null;
+
+function escapeHTML(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function normalize(value) {
+  var text = String(value == null ? "" : value);
+  if (text.normalize) text = text.normalize("NFKC");
+  return text.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+function seriesFor(title) {
+  if (title.indexOf("天註：") === 0) return "tian";
+  if (title.indexOf("普天註釋：") === 0 || title.indexOf("普天注释：") === 0) return "putian";
+  return "other";
+}
+
+function seriesLabel(value) {
+  return value === "tian" ? "天註系列" : value === "putian" ? "普天註釋" : "電子書選讀";
+}
+
+function parsePeople(raw) {
+  if (!raw) return [];
+  return raw.split(";").map(function (item) {
+    item = item.trim();
+    var match = item.match(/^(.*?)\s*\[([^\]]+)\]$/);
+    return {
+      name: match ? match[1].trim() : item,
+      role: match ? match[2] : "作者"
+    };
+  });
+}
+
+function peopleText(book) {
+  if (!book.people.length) return "貢獻者資料待補";
+  return book.people.map(function (person) {
+    return person.name + " [" + person.role + "]";
+  }).join("；");
+}
+
+var descriptions = {
+  "fuGgEQAAQBAJ": {
+    date: "2025年1月", pages: 602,
+    text: "從經文鑑別、語法、歷史與神學等層面研讀提摩太前書，結合現代研究、教父與猶太著作、希臘羅馬文獻、死海古卷、莎草紙文獻及銘文等資料，探討教牧書信的修辭策略與神學意義。"
+  },
+  "aSnkEQAAQBAJ": {
+    date: "2025年1月", pages: 472,
+    text: "研讀提摩太後書與提多書，結合語言及社會文化背景，重新理解教牧書信的神學信息。作者序反思將教牧書信視為教會秩序手冊或適應主流社會之信仰的進路，強調福音挑戰現實的聲音。"
+  },
+  "Yxn7DwAAQBAJ": {
+    date: "2020年9月", pages: 784,
+    text: "供一年默想與禱告之用。從詩篇卷一選取25篇、卷二選取21篇，原則上每週一篇，分作七日，提供經文分析、自譯、默想與禱告；另設「詩篇的世界」及卷一、卷二總結。"
+  },
+  "zBykBwAAQBAJ": {
+    date: "2007年10月", pages: 760,
+    text: "供一年靈修之用，藉創世記中的希伯來文字詞引導讀者思想、反省，深化與神的相交。讀者不必懂得原文。原介紹另提及作者示範希伯來文字詞讀音，但提供資料未包含該音訊網址。"
+  },
+  "nucEDQAAQBAJ": {
+    date: "2014年10月", pages: 779,
+    text: "謝挺繼《始於神》《慧於神》後的第三本原文靈修著作。從聖經原文字詞切入，探討出埃及記所啟示的神的屬性、以色列民的身分，以及律法和會幕的信息，拉近經文與讀者的距離。"
+  },
+  "1_jaEAAAQBAJ": {
+    date: "2023年1月", pages: 371,
+    text: "從文本互涉及文體分析等角度探討雅歌與以斯帖記的神學聯繫，反思神看似沉默、隱藏或缺席時，信徒如何認識神、承擔人的責任並實踐信心。"
+  },
+  "ZAhsCgAAQBAJ": {
+    date: "2013年6月", pages: 776,
+    text: "結合箴言、約伯記與傳道書的信息，呈現風平浪靜、狂風暴雨和風雲變幻的智慧，引導讀者走向彰顯神智慧的耶穌，以敬畏神的態度面對人生不同階段與季節的挑戰。"
+  },
+  "VzEhEAAAQBAJ": {
+    date: "2021年3月", pages: 112,
+    text: "幫助初信者，以及希望更明白基督徒生活原則的信徒成長。涵蓋得救確據、生命的主、靈修、聚會、主內交通、見證、聖靈果子、讀經、禱告、金錢運用、明白神旨及得勝生活等題目。",
+    resource: "https://www.tiendao.org.hk/store/td0209-p.116-118.pdf"
+  },
+  "qo4oEQAAQBAJ": {
+    date: "2024年9月", pages: 264,
+    text: "運用「載體」（typos）的概念，探索舊約主題如何展現於路加的福音敘事，超越單從預言與應驗理解兩約關係的進路，反思神的拯救計劃與基督恩典。"
+  },
+  "FaA5EAAAQBAJ": {
+    date: "2021年7月", pages: 230,
+    text: "面對頭腦與內心失連、肢體關係疏離、靈命與事奉割裂三大危機，以神人關係為基礎、活現基督品格為目標，探索整全靈命塑造，重建與聖靈、肢體及事奉的關係。"
+  }
+};
+
+var bios = {
+  "paoNew": "提供的《教牧書信》商品頁列鮑維均（David W. Pao）為芝加哥三一神學院院長，並列美國哈佛大學哲學博士學歷。職銜屬來源介紹，未核實現況。",
+  "paoOld": "原書單列鮑維均為三一神學院新約教授及系主任、「天道聖經註釋」新約編輯，以及 Zondervan Exegetical Commentary Series 顧問編輯。學歷包括哈佛大學哲學博士、文學碩士、神學研究碩士，以及惠頓大學新約研究文學碩士、哲學和古典文學文學士。以上為該書所附介紹，未核實現況。",
+  "sunOld": "謝挺生於北京、在香港長大，1989年赴美留學，原主修工商管理，後信主並回應呼召。獲金門浸信會神學院道學碩士、達拉斯神學院神學碩士、福樂神學院哲學博士，專研舊約。《始於神》介紹列正道福音神學院舊約副教授；此為來源職銜，未核實現況。",
+  "sunPsalms": "《頌於神（上）》提供的介紹記述謝挺自2004年起任教於正道福音神學院，並列舊約教授職銜。其學歷包括金門浸信會神學院道學碩士、達拉斯神學院神學碩士、福樂神學院哲學博士，主修舊約。職銜未核實現況。",
+  "sunAbsent": "《缺席的神》提供的介紹記述謝挺生於北京、在香港長大，其後赴美留學；獲金門浸信會神學院道學碩士、達拉斯神學院神學碩士、福樂神學院哲學博士，主修舊約。原介紹列福樂神學院舊約教授、中華研究中心副主任，未核實現況。",
+  "chan": "提供的商品頁列陳偉迦（Addson W. Chan）為香港播道神學院副教授，獲美國三一神學院哲學博士；喜愛從新約引用舊約的角度討論聖經神學。職銜未核實現況。",
+  "wong": "黃韻妍畢業於香港大學，主修英國文學，曾任中學教師；其後於福樂神學院完成文學碩士、婚姻與家庭治療碩士及教牧學博士，研究整全靈命塑造。提供資料記述其回港參與教會開荒與牧養，自2007年起於中國宣道神學院教授相关課程，2016年完成三藩市神學院屬靈導引文憑。任職資訊未核實現況。",
+  "saints": "蘇遠泰：香港中文大學哲學博士，原介紹列香港神學院神學及歷史科副教授；記述香港中華傳道會柴灣堂顧問傳道（2012–2014）等經歷，著述涉及信仰理解、科學與宗教、地獄及未聞福音者得救等課題。溫慧汶：香港神學院道學碩士，原介紹記述從事基督教寫作，關注基督教與天主教對話及弱勢群體；曾從事時裝採購。其論文探討羅馬書五章12至21節與普救論，獲該院2017年紀念周郁晞牧師最佳論文獎。工作及職銜未核實現況。",
+  "yeung": "楊文立牧師：原介紹列香港宣道會荃灣堂特約教牧、加拿大神學研究院道學碩士及福樂神學院教牧學博士，並記述在加拿大與香港牧會超過27年，著作包括《小先知的大啟示》《毫不起眼的利未記》《祈禱萬花筒》等。任職及年資屬原介紹。",
+  "paul": "提供資料描述 Paul K. Lee 為牧師、神學博士（教會歷史）及宣教士，曾參與社會宣教、開展教會，擔任韓信教會行政牧師及別世牧會研究院研究室長，與李重表牧師確立「別世神學」。資料記述其45歲離開原有事工成為中華宣教士，以傳播別世之道為事奉方向。",
+  "shum": "岑紹麟：提供資料列維真神學院基督教研究碩士、格拉斯哥大學哲學博士，研究保羅書信及神學、第二聖殿猶太教與文獻。曾從事聖經翻譯和編輯，原介紹列香港浸信會神學院新約助理教授，未核實現況。",
+  "kaiser": "華德‧凱瑟（Walter C. Kaiser Jr.）：提供的英文介紹列 Brandeis University 哲學博士、Gordon-Conwell Theological Seminary 舊約榮休教授及榮休院長。著作涉及釋經神學、舊約彌賽亞、神的應許計劃與聖經詮釋。原資料中的 Amazon 追蹤宣傳文字已移除。",
+  "chow": "周燕屏：提供資料列1985年台灣香江學院中國文學系文學士、1989年建道神學院神學學士、1997年中華神學院教牧學碩士。原介紹記述其教會牧養經驗及對小組查經的重視，著作涉及哈巴谷書、阿摩司書、彌迦書、約拿書與青少年靈修。",
+  "tommy": "原書單介紹記述陳志耀 Tommy 從事生命教育，創辦 EDIT Workshop Company Limited，設計 LPD® 學習與個人成長課程，並參與生命教育基金會、學校課程顧問、專欄寫作及理財教育等工作。以上經歷與任職未核實現況。",
+  "tommyLPD": "《Tommy 的LPD® 教育系統》所附介紹記述陳志耀以一級榮譽畢業於香港大學土木工程系，曾自修法律並取得工程相關資格，後轉向生命教育。原介紹列2001年創辦 EDIT Workshop、設計 LPD® 教育系統，2010年成立生命教育基金會，並記述演講、培訓及「321使命」。",
+  "au": "歐啟文：提供資料記述其於印第安納大學雙主修生物學與心理學，畢業後回港定居，任教生物科三十多年直至退休。曾於津校及官校任教，重視與學生相處，亦參與報刊與文學寫作。",
+  "ho": "何照洪：提供資料記述1950年生於澳門、1968年赴台就讀國防醫學院，曾於台北榮民總醫院歷任醫師、血液科主任醫師及教授，2005年提早退休後參與跨文化福音工作約七年。原介紹亦記錄其受浸、石牌地區植堂，以及長期查經、講道和培訓經歷。",
+  "chanMan": "陳文紀：曾任中學教師，後獲中國神學研究院道學碩士、神學碩士（舊約），以及比勒陀利亞大學哲學博士。曾於播道會太古城堂及恩福堂牧會，參與漢語聖經協會舊約翻譯、研究與寫作，專注拉比釋經。提供資料記述其2013年10月任教期間離世。",
+  "chanWai": "陳維進：原介紹記述1970年生於馬來西亞，1995年畢業於南洋理工大學機械工程系，曾任工程師和教師，其後獲新加坡神學院道學碩士、台灣神學院神學碩士及2015年神學博士（新約），研究羅馬書。原介紹列印尼萬隆福音神學院講師，未核實現況。",
+  "wongTin": "黃天逸：提供資料列美國中北大學哲學博士、哥頓康韋爾神學院教牧學博士（婚姻及家庭輔導）、伯特利神學院基督教婚姻及家庭治療碩士及建道神學院道學碩士。原介紹列建道神學院輔導及教牧系助理教授、認證輔導員及婚姻家庭治療師，未核實現況。",
+  "lau": "劉帝傑（Dickie Lau）：原介紹記述1959年生於香港，1982年畢業於香港浸會大學傳理系，主修電影，曾參與廣播、出版及影評，其後於天普大學獲傳播學碩士，研究國際資訊科技。資料亦列商界、基督教機構、編輯與寫作經歷，關注科技、文化及信仰。",
+  "chu": "朱昌錂：提供資料記述1977年畢業於香港播道神學院，牧會四年後於1982年赴泰國宣教，1993年獲福樂神學院宣教學博士。原介紹列中華福音使命團國際總幹事及多間神學院客座教授，著作包括《差傳睇真啲》《差傳點點心》《婆說婆有理》《無心插柳》等，未核實現況。",
+  "loong": "龍胡啟芬：原介紹列恩福聖經學院講師兼學生事務主任、三一福音神學院文學碩士（舊約），著有《古道恩情：舊約敘事文選讀》，亦參與《何西阿書研經導讀》及主日學教材翻譯。職銜未核實現況。",
+  "lok": "駱德恩：原介紹列倫敦國王學院神學博士，受麥格夫指導，及香港浸會大學助理教授。研究包括系統神學、宗教哲學、科學與宗教及歷史鑒別學，著作包括《愈辯愈明》《星空背後的真理》及多項英文研究。職銜未核實現況。",
+  "chanTak": "陳德修：原介紹記述其在香港出生及長大，早年从事建築，1980年取得皇家特許測量師資格，後獲康州大學企業管理碩士、哥頓康維爾神學院道學碩士及波士頓大學神學博士。資料列波士頓華人佈道會及華人教會機構的事奉，並記錄與章力生見面通信的經歷。",
+  "kwong": "鄺炳釗：提供資料列布蘭代斯大學哲學博士（古代近東文化），並記述婚姻家庭輔導、教學、牧會及法律工作經歷。資料記述自1976年起在中國神學研究院教授詩篇，1993年起於建道神學院任教；原介紹列建道神學院榮休教授及明道社榮譽社長，未核實現況。",
+  "leung": "梁美心：原介紹列三一神學院哲學博士、香港播道神學院新約科副教授，研究約翰福音、約翰書信、啟示錄、耶穌比喻、第二聖殿猶太教、新約神學與希臘文。著作涉及約翰福音十架神學及受難復活默想，職銜未核實現況。",
+  "yip": "葉一一：提供資料記述其希望以繪畫恩賜及漫畫表達創世記故事；筆名是便於讀者記憶。原介紹稱此為其首本經出版社發行的作品。",
+  "creation": "楊錫鏘：原介紹列中國神學研究院聖經科訪問教授暨榮譽校牧、維真學院基督教研究碩士，著作涉及召命、聖言及創造神學。黃讚雄：原介紹列香港專業人才服務機構項目經理及《職報》編輯，獲中國神學研究院基督教研究碩士、巴斯大學企業管理碩士，與楊錫鏘合著創造神學與職場文章。職銜未核實現況。",
+  "tsai": "蔡金玲（Jenny Tsai）：提供資料列中華福音神學院道學碩士、達拉斯神學院神學碩士與哲學博士，曾任傳道，並於多間神學院和大學任教。原介紹記述其神學教育、聖經講座、傳道人培訓及中文網路課程教學，亦參與聖經與工具書翻譯。",
+  "fung": "馮蔭坤（Ronald Yam-Kwan Fung）：原介紹列中國神學研究院退休教授、香港中文大學崇基學院神學院名譽高級研究員。學歷包括香港大學文學士、倫敦聖經學院文憑、倫敦大學道學士、福樂神學院神學碩士及曼徹斯特大學哲學博士；著有多種新約書信註釋。職銜未核實現況。",
+  "lo": "羅淑芬：提供資料列三一福音神學院教牧學博士、約翰麥士威爾團隊認證教練、香港註冊社工、「焯亮事工」創辦人及神學院特約講師，曾從事社工、傳道與入學工作，推廣生命教練培訓及導引。職務與資格狀態未核實現況。",
+  "tang": "鄧啟耀：原介紹記述1986年赴加拿大求學後信主，獲約克大學語言學學士、天道神學院道學碩士與福樂神學院教牧學博士，2009年獲加拿大宣道會聯會按立。1999年起參與牧會與宣教，2011年回港，2014年創辦葡萄樹生命果子事工。",
+  "quick": "提供資料列作者名單：何傑、吳獻章、呂紹昌、李春榮、周兆真、邵晨光、邵樟平、孫寶玲、區伯平、區應毓、張略、梁國權、莫鉅智、郭文池、馮兆成、馮耀榮、黃浩儀、黃儀章、楊詠嫦、雷小龍、熊紹榮、黎永明、黎業文、蕭楚輝、賴建國、謝慧兒。",
+  "treier": "特雷耶（Daniel J. Treier）：提供的英文介紹記述其自2001年起於 Wheaton College 任教，之前曾於 Trinity Evangelical Divinity School 與 Cornerstone University 教學。獲 Grand Rapids Theological Seminary 道學碩士、神學碩士及2002年 Trinity Evangelical Divinity School 系統神學博士，受 Kevin J. Vanhoozer 指導。",
+  "pastors": "提供資料記述，本書作者們是中國基督教播道會港福堂的牧者；未核實現任職務。",
+  "hui": "許道良：提供資料記述生於越南，後赴美留學，與妻子徐春華曾為播道會宣教士。1975至2003年於香港播道神學院任教，1984至2003年任院長；2008至2012年任洛杉磯華人播道會主任牧師，退休後仍參與領袖培育。",
+  "hoKin": "何建宗：提供資料介紹其科學教育、環保工作、自然與信仰反思，以及南北極考察經歷；原介紹列香港公開大學科技學院院長、綠色力量會長等職銜。該段兼有書籍推介性質，職銜未核實現況。"
+};
+
+var bioById = {
+  "fuGgEQAAQBAJ":"paoNew",
+  "aSnkEQAAQBAJ":"paoNew",
+  "7vhtDwAAQBAJ":"paoOld",
+  "zBykBwAAQBAJ":"sunOld",
+  "Yxn7DwAAQBAJ":"sunPsalms",
+  "1_jaEAAAQBAJ":"sunAbsent",
+  "qo4oEQAAQBAJ":"chan",
+  "FaA5EAAAQBAJ":"wong",
+  "Kj5tDwAAQBAJ":"saints",
+  "CkFtDwAAQBAJ":"saints",
+  "Y0NtDwAAQBAJ":"yeung",
+  "lA1uDwAAQBAJ":"shum",
+  "LBikBwAAQBAJ":"kaiser",
+  "2kBtDwAAQBAJ":"chow",
+  "tEBtDwAAQBAJ":"chow",
+  "EkFtDwAAQBAJ":"chow",
+  "8EBtDwAAQBAJ":"chow",
+  "Z9SdDAAAQBAJ":"tommy",
+  "8tGdDAAAQBAJ":"tommy",
+  "FNGdDAAAQBAJ":"tommy",
+  "P9OdDAAAQBAJ":"tommy",
+  "Wc-dDAAAQBAJ":"tommy",
+  "qNGdDAAAQBAJ":"tommy",
+  "RdWdDAAAQBAJ":"tommyLPD",
+  "hco9CwAAQBAJ":"au",
+  "bVM9CwAAQBAJ":"ho",
+  "cLnLBgAAQBAJ":"chanMan",
+  "06KTCgAAQBAJ":"chanMan",
+  "xDXTCgAAQBAJ":"chanWai",
+  "Qj5tDwAAQBAJ":"wongTin",
+  "hDM4CwAAQBAJ":"lau",
+  "AqadDAAAQBAJ":"chu",
+  "TKadDAAAQBAJ":"chu",
+  "KPltDwAAQBAJ":"chu",
+  "u6adDAAAQBAJ":"chu",
+  "REBtDwAAQBAJ":"loong",
+  "TNFtDwAAQBAJ":"lok",
+  "2vZtDwAAQBAJ":"chanTak",
+  "rwakBwAAQBAJ":"kwong",
+  "MvWjBwAAQBAJ":"kwong",
+  "nN7nBgAAQBAJ":"kwong",
+  "O_ijBwAAQBAJ":"kwong",
+  "aD5tDwAAQBAJ":"leung",
+  "3LfsDQAAQBAJ":"yip",
+  "LEFtDwAAQBAJ":"creation",
+  "ctFtDwAAQBAJ":"tsai",
+  "gtFtDwAAQBAJ":"fung",
+  "k0NtDwAAQBAJ":"lo",
+  "g_RtDwAAQBAJ":"tang",
+  "eyZpDAAAQBAJ":"quick",
+  "KP6jBwAAQBAJ":"treier",
+  "KD5tDwAAQBAJ":"pastors",
+  "VNFtDwAAQBAJ":"hui",
+  "b6g2DwAAQBAJ":"hoKin"
+};
+
+function bioFor(book) {
+  if (book.people.some(function (p) { return p.name === "Paul K. Lee"; })) return bios.paul;
+  return bios[bioById[book.id]] || "";
+}
+
+var books = [];
+
+function bookURL(book) {
+  return book.id ? "https://play.google.com/store/books/details?id=" + encodeURIComponent(book.id) : "";
+}
+
+function storeHTML(book) {
+  if (!book.id) return '<span class="pending">購買連結待補</span>';
+  return '<a class="button" href="' + escapeHTML(bookURL(book)) + '" target="_blank" rel="noopener noreferrer" aria-label="在 Google Play 查看' + escapeHTML(book.title) + '（另開分頁）">Google Play ↗</a>';
+}
+
+function saveHTML(book) {
+  var active = saved.has(book.key);
+  return '<button type="button" class="save' + (active ? ' saved' : '') + '" data-save="' + book.key + '" aria-pressed="' + active + '" aria-label="' + (active ? '移出書單：' : '加入書單：') + escapeHTML(book.title) + '">' + (active ? '♥ 已收藏' : '♡ 書單') + '</button>';
+}
+
+function getFiltered() {
+  var tokens = normalize(el("search").value).split(" ").filter(Boolean);
+  var series = el("series").value;
+  var language = el("language").value;
+  return books.filter(function (book) {
+    return (!savedOnly || saved.has(book.key)) &&
+      (series === "all" || book.series === series) &&
+      (language === "all" || (language === "unknown" ? !book.language : book.language === language)) &&
+      tokens.every(function (token) { return book.search.indexOf(token) !== -1; });
+  });
+}
+
+function cardHTML(book) {
+  var shortTitle = book.title.replace(/^(天註：|普天註釋：|普天注释：)/, "");
+  var authors = book.people.filter(function (p) { return p.role === "作者"; });
+  var coverPeople = (authors.length ? authors : book.people).map(function (p) { return p.name; }).join(" · ");
+  return '<article class="book">' +
+    '<button type="button" class="cover c' + (book.key % 6) + '" data-detail="' + book.key + '" aria-label="查看' + escapeHTML(book.title) + '詳情">' +
+    '<small>TIEN DAO · 示意書封</small><strong>' + escapeHTML(shortTitle) + '</strong><small>' + escapeHTML(coverPeople || "資料待補") + '</small></button>' +
+    '<div class="body"><div class="tags"><span class="tag">' + seriesLabel(book.series) + '</span><span class="tag">' + escapeHTML(book.language || "語言未提供") + '</span>' +
+    (book.id ? '' : '<span class="tag">連結待補</span>') + '</div>' +
+    '<h2><button type="button" class="title-button" data-detail="' + book.key + '">' + escapeHTML(book.title) + '</button></h2>' +
+    (book.subtitle ? '<p class="subtitle">' + escapeHTML(book.subtitle) + '</p>' : '') +
+    '<p class="people">' + escapeHTML(peopleText(book)) + '</p>' +
+    '<div class="actions">' + storeHTML(book) + saveHTML(book) + '</div></div></article>';
+}
+
+function render() {
+  var filtered = getFiltered();
+  var setting = el("pageSize").value;
+  var size = setting === "all" ? Math.max(filtered.length, 1) : Number(setting);
+  var pages = Math.max(1, Math.ceil(filtered.length / size));
+  page = Math.min(Math.max(page, 1), pages);
+  var start = (page - 1) * size;
+  var visible = filtered.slice(start, start + size);
+
+  el("catalogue").className = "catalogue" + (listView ? " list" : "");
+  el("catalogue").innerHTML = visible.length ? visible.map(cardHTML).join("") :
+    '<div class="empty"><h2>沒有符合條件的書目</h2><p class="note">' +
+    (savedOnly ? '可返回全部書籍，或先將書籍加入書單。' : '請嘗試其他搜尋字詞，或重設篩選。') +
+    '</p><button type="button" data-reset>顯示全部書籍</button></div>';
+
+  el("status").textContent = (savedOnly ? "我的書單 · " : "") +
+    "已收錄 " + books.length + " 本 · 符合篩選 " + filtered.length + " 本" +
+    (filtered.length ? " · 顯示 " + (start + 1) + "–" + Math.min(start + size, filtered.length) : "");
+  el("savedCount").textContent = saved.size;
+  el("savedToggle").setAttribute("aria-pressed", String(savedOnly));
+  el("savedToggle").className = savedOnly ? "" : "light";
+  el("viewToggle").textContent = listView ? "格狀顯示" : "清單顯示";
+
+  if (pages <= 1) {
+    el("pagination").innerHTML = "";
+    return;
+  }
+
+  var html = '<button type="button" data-page="' + (page - 1) + '"' + (page === 1 ? ' disabled' : '') + '>上一頁</button>';
+  var numbers = [1, page - 1, page, page + 1, pages].filter(function (n, i, array) {
+    return n >= 1 && n <= pages && array.indexOf(n) === i;
+  }).sort(function (a, b) { return a - b; });
+  var previous = 0;
+
+  numbers.forEach(function (n) {
+    if (previous && n - previous > 1) html += '<span aria-hidden="true">…</span>';
+    html += '<button type="button" data-page="' + n + '" class="' + (n === page ? 'active' : '') + '"' + (n === page ? ' aria-current="page"' : '') + '>' + n + '</button>';
+    previous = n;
+  });
+
+  html += '<button type="button" data-page="' + (page + 1) + '"' + (page === pages ? ' disabled' : '') + '>下一頁</button>';
+  el("pagination").innerHTML = html;
+}
+
+function notify(message) {
+  el("toast").textContent = message;
+  el("toast").hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { el("toast").hidden = true; }, 2500);
+}
+
+function warningsFor(book) {
+  var items = [];
+  if (!book.id) items.push("原書單沒有購買網址；本頁沒有猜測或補寫連結。");
+  if (!book.people.length) items.push("原書單沒有提供作者或其他貢獻者資料。");
+  if (!book.language) items.push("原始語言欄空白，未擅自補填。");
+  if (book.language === "ara") items.push("原語言代碼為 ara，與書名中的「簡體版」有待核對；本頁保留原值。");
+  if (book.id === "8EBtDwAAQBAJ") items.push("原書單下冊組員本副標題寫「希伯來書第一至六章」，與下冊組長本所列「第七至十三章」不同，請核對原始資料。");
+  return items;
+}
+
+function fillDetail(book) {
+  var detail = descriptions[book.id];
+  var biography = bioFor(book);
+  var warnings = warningsFor(book);
+  el("modalContent").innerHTML =
+    '<div class="tags"><span class="tag">' + seriesLabel(book.series) + '</span></div>' +
+    '<h2 id="detailTitle">' + escapeHTML(book.title) + '</h2>' +
+    (book.subtitle ? '<p class="subtitle">' + escapeHTML(book.subtitle) + '</p>' : '') +
+    '<p>' + escapeHTML(peopleText(book)) + '</p>' +
+    '<p class="note">原始語言欄：' + escapeHTML(book.language || "未提供") + '</p>' +
+    (detail ? '<p class="note">提供頁面日期：' + escapeHTML(detail.date) + ' · ' + detail.pages + ' 頁</p>' : '') +
+    '<div class="actions">' + storeHTML(book) + saveHTML(book) + '</div>' +
+    (warnings.length ? '<div class="warning">' + warnings.map(escapeHTML).join("<br>") + '</div>' : '') +
+    '<h3>內容簡介</h3><p>' + escapeHTML(detail ? detail.text : "未提供本書內容簡介。請前往 Google Play Books 查看商品頁；本頁不根據書名自行推測內容。") + '</p>' +
+    (detail ? '<p class="note">內容、日期及頁數為提供商品頁文字的整理，未作即時核實。</p>' : '') +
+    (detail && detail.resource ? '<p><a href="' + escapeHTML(detail.resource) + '" target="_blank" rel="noopener noreferrer">《茁苗》答案頁 PDF ↗</a></p>' : '') +
+    '<h3>作者／貢獻者介紹</h3><p>' + escapeHTML(biography || "這筆書目沒有附上作者簡介，本頁未從其他書籍推定或補寫。") + '</p>' +
+    (biography ? '<p class="note">以上為提供資料的摘要，職銜與經歷未作現況核實。</p>' : '') +
+    '<p class="note">示意書封並非正式封面。價格、供應、試讀、付款及閱讀權限以 Google Play Books 為準。</p>';
+}
+
+function openDetail(key) {
+  var book = books[key];
+  if (!book) return;
+  previousFocus = document.activeElement;
+  currentDetail = key;
+  fillDetail(book);
+  el("modal").hidden = false;
+  document.body.style.overflow = "hidden";
+  el("panel").scrollTop = 0;
+  el("closeModal").focus();
+}
+
+function closeDetail() {
+  el("modal").hidden = true;
+  document.body.style.overflow = "";
+  currentDetail = null;
+  if (previousFocus && document.contains(previousFocus)) previousFocus.focus();
+  else el("search").focus();
+}
+
+function reset() {
+  el("search").value = "";
+  el("series").value = "all";
+  el("language").value = "all";
+  savedOnly = false;
+  page = 1;
+  render();
+}
+
+function exportSaved() {
+  var selected = books.filter(function (book) { return saved.has(book.key); });
+  if (!selected.length) {
+    notify("請先將書籍加入我的書單。");
+    return;
+  }
+  var text = "天道書樓｜我的閱讀書單\n\n" + selected.map(function (book, index) {
+    return (index + 1) + ". " + book.title +
+      (book.subtitle ? "：" + book.subtitle : "") + "\n" +
+      peopleText(book) + "\n" + (bookURL(book) || "購買連結待補");
+  }).join("\n\n");
+
+  var blob = new Blob(["\uFEFF" + text], {type:"text/plain;charset=utf-8"});
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement("a");
+  link.href = url;
+  link.download = "TienDao-我的書單.txt";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  notify("已建立書單檔案；若未下載，請在獨立瀏覽器開啟此 HTML。");
+}
+
+try {
+  var lines = dataElement.textContent.trim().split(/\r?\n/).filter(function (line) {
+    return line.trim();
+  });
+
+  books = lines.map(function (line, index) {
+    var fields = line.split("|");
+    var language = fields.length > 4 ? fields[4].trim() : "chi";
+    if (language === "~") language = "";
+
+    var book = {
+      key: index,
+      title: (fields[0] || "").trim(),
+      id: (fields[1] || "").trim(),
+      people: parsePeople(fields[2] || ""),
+      subtitle: (fields[3] || "").trim(),
+      language: language
+    };
+    book.series = seriesFor(book.title);
+    book.search = normalize(book.title + " " + book.subtitle + " " + peopleText(book) + " " + bioFor(book));
+    return book;
+  });
+
+  if (!books.length) throw new Error("內嵌書目為空");
+
+  el("search").addEventListener("input", function () { page = 1; render(); });
+  ["series", "language", "pageSize"].forEach(function (id) {
+    el(id).addEventListener("change", function () { page = 1; render(); });
+  });
+  el("reset").addEventListener("click", reset);
+  el("savedToggle").addEventListener("click", function () {
+    savedOnly = !savedOnly;
+    page = 1;
+    render();
+  });
+  el("viewToggle").addEventListener("click", function () {
+    listView = !listView;
+    render();
+  });
+  el("export").addEventListener("click", exportSaved);
+  el("closeModal").addEventListener("click", closeDetail);
+  el("modal").addEventListener("click", function (event) {
+    if (event.target === el("modal")) closeDetail();
+  });
+
+  document.addEventListener("click", function (event) {
+    var target = event.target;
+    if (!target.closest) return;
+
+    var saveButton = target.closest("[data-save]");
+    if (saveButton) {
+      var key = Number(saveButton.getAttribute("data-save"));
+      if (saved.has(key)) saved.delete(key);
+      else saved.add(key);
+
+      if (currentDetail !== null) fillDetail(books[currentDetail]);
+      render();
+      notify(saved.has(key) ? "已加入書單；重新整理頁面後會清除。" : "已從書單移除。");
+      return;
+    }
+
+    var detailButton = target.closest("[data-detail]");
+    if (detailButton) {
+      openDetail(Number(detailButton.getAttribute("data-detail")));
+      return;
+    }
+
+    var pageButton = target.closest("[data-page]");
+    if (pageButton && !pageButton.disabled) {
+      page = Number(pageButton.getAttribute("data-page"));
+      render();
+      el("search").scrollIntoView({block:"start"});
+      return;
+    }
+
+    if (target.closest("[data-reset]")) reset();
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (el("modal").hidden) return;
+    if (event.key === "Escape") {
+      closeDetail();
+      return;
+    }
+    if (event.key === "Tab") {
+      var focusables = Array.prototype.slice.call(
+        el("panel").querySelectorAll('button:not([disabled]),a[href],[tabindex="0"]')
+      );
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  render();
+
+  /* Hide the plain-text fallback only after the catalogue renders successfully. */
+  dataElement.hidden = true;
+  el("fallbackIntro").hidden = true;
+
+} catch (error) {
+  dataElement.hidden = false;
+  el("fallbackIntro").hidden = false;
+  el("status").textContent = "互動目錄無法啟動；完整書目仍顯示在下方。";
+  console.error("Catalogue initialization failed:", error);
+}
+
+/* If a later runtime error occurs, restore the readable embedded list. */
+window.addEventListener("error", function () {
+  dataElement.hidden = false;
+  el("fallbackIntro").hidden = false;
+});
+})();
+</script>
+
+
+</body></html>
